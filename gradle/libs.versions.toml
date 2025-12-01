@@ -14,6 +14,8 @@ junit = "4.13.2"
 kotlin = "2.2.20"
 navigatio3 = "2.9.1"
 koin-bom = "4.1.1"
+material_extend = "1.7.3"
+datetime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -31,6 +33,9 @@ compose-nav3 = { module = "org.jetbrains.androidx.navigation:navigation-compose"
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-bom" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-bom" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin-bom" }
+
+materila-icon-extend = { module = "org.jetbrains.compose.material:material-icons-extended",version.ref = "material_extend"}
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime",version.ref = "datetime"}
 
 
 [plugins]

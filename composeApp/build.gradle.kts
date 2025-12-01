@@ -41,6 +41,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(libs.materila.icon.extend)
+            implementation(libs.kotlinx.datetime)
+        }
+        commonMain.dependencies {
+
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)

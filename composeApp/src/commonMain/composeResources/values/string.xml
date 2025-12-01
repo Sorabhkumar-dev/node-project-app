@@ -1,0 +1,38 @@
+<resources>
+    <string name="today_task">Today Task</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="okay">Okay</string>
+    <string name="select_time">Select Time</string>
+    <string name="select_date">Select Date</string>
+
+    <string name="lets_add_something_to_get_done">Let’s add something to get done!</string>
+    <string name="what_do_you_want_to_get_done">What do you want to get done?</string>
+    <string name="add_a_task">Add a Task</string>
+    <string name="add_more_info">Add More Info</string>
+
+    <string name="what_do_you_want_to_accomplish">What do you want to accomplish?</string>
+    <string name="what_the_task">What the Task?(optional)</string>
+
+    <string name="when_do_you_want_to_get_this_done">When do you want to get this done?</string>
+    <string name="choose_a_day_to_take_action">Choose a day to take action(optional)</string>
+    <string name="pick_the_best_time_to_focus">Pick the best time to focus</string>
+    <string name="give_your_task_its_perfect_moment">Give your task its perfect moment(optional)</string>
+
+    <string name="tap_to_prioritize">Tap to Prioritize</string>
+    <string name="important_task">Important Task(optional)</string>
+
+    <string name="group_tasks_that_move_your_goals_forward">Group tasks that move your goals forward</string>
+    <string name="choose_a_category">Choose a category(optional)</string>
+
+    <string name="do_you_want_to_return_this_task">Do you want to return this task?</string>
+
+    <string name="choose_how_frequently_you_want_this_task_to_return">Choose how frequently you want this task to return</string>
+    <string name="should_this_task_repeat">Should this task repeat?(optional)</string>
+
+    <string name="recurring_task">Recurring task</string>
+    <string name="choose_recurrence">Choose Recurrence(optional)</string>
+
+    <string name="add_task">Add Task</string>
+
+</resources>
