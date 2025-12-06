@@ -77,7 +77,7 @@ private fun AddTaskContent(viewModel: AddTaskViewModel) {
                     style = MaterialTheme.typography.titleLarge
                 )
 
-                IconButton(onClick = {}) {
+                IconButton(onClick = viewModel::saveTask) {
                     Icon(imageVector = Icons.Default.Done, null, modifier = Modifier.size(36.dp))
                 }
             }

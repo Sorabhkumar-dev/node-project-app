@@ -3,9 +3,16 @@ package com.sorabh.node.screens.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sorabh.node.database.TaskEntity
+import com.sorabh.node.database.TaskRepository
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.MonthNames
@@ -16,7 +23,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class AddTaskViewModel : ViewModel() {
+class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel() {
     val taskTitle = mutableStateOf(TextFieldValue(""))
     val taskDescription = mutableStateOf(TextFieldValue(""))
 
@@ -107,6 +114,21 @@ class AddTaskViewModel : ViewModel() {
 
     fun onRepeatTypeSelected(repeatType: RepeatType){
         selectRepeatType.value = repeatType
+    }
+
+    fun saveTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val task = TaskEntity(
+                title = taskTitle.value.text,
+                description = taskDescription.value.text,
+                dateTime = LocalDateTime(taskDate.value, taskTime.value),
+                isImportant = isTaskPriority.value,
+                taskType = selectedTaskCategory.value,
+                isRepeatable = isTaskRepeatable.value,
+                repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null
+            )
+            taskRepository.insertTask(task)
+        }
     }
 
 }
