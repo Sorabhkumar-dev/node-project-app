@@ -9,7 +9,7 @@ import com.sorabh.node.database.TaskDao
 import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.database.type_converters.LocalDateTimeConverters
 
-@Database(entities = [TaskEntity::class], version = 1)
+@Database(entities = [TaskEntity::class], version = 2)
 @TypeConverters(LocalDateTimeConverters::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {

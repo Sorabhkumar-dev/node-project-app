@@ -3,6 +3,7 @@ package com.sorabh.node.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.sorabh.node.utils.RepeatType
+import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.TaskType
 import kotlinx.datetime.LocalDateTime
 
@@ -15,5 +16,6 @@ data class TaskEntity(
     val isImportant: Boolean = false,
     val taskType: TaskType = TaskType.WORK,
     val isRepeatable: Boolean = false,
-    val repeatType: RepeatType? = null
+    val repeatType: RepeatType? = null,
+    val taskStatus: TaskStatus = TaskStatus.PENDING
 )

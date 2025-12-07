@@ -8,6 +8,6 @@ import org.koin.dsl.module
 
 val appModule = module {
     viewModel { AppViewModel() }
-    viewModel { TodayTaskViewModel() }
+    viewModel { TodayTaskViewModel(get()) }
     viewModel { AddTaskViewModel(get()) }
 }

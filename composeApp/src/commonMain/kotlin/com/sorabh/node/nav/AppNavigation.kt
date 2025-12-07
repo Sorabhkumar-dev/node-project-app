@@ -23,16 +23,20 @@ fun AppNavigation(
     navBackStack: NavBackStack<NavKey>,
     paddingValues: PaddingValues
 ) {
+    val onNavigate: (NavKey) -> Unit = {
+        navBackStack.add(it)
+    }
+
     NavDisplay(
         backStack = navBackStack,
-        modifier = Modifier.padding(paddingValues).padding(horizontal = 16.dp)
+        modifier = Modifier.padding(paddingValues)
     ) { key ->
         when (key) {
             is TodayTaskNav -> NavEntry(key) {
                 TodayTaskScreen(
                     sharedViewModel = viewModel,
                     viewModel = koinViewModel(),
-                    navBackStack = navBackStack
+                    onNavigate = onNavigate
                 )
             }
 

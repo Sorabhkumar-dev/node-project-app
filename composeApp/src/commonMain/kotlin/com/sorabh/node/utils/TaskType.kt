@@ -8,5 +8,6 @@ enum class TaskType(val value:String) {
     FINANCE("Finance"),
     QUICK("Quick"),
     PROJECTS("Projects"),
-    GOALS("Goals")
+    GOALS("Goals"),
+    SHOPPING("shopping")
 }

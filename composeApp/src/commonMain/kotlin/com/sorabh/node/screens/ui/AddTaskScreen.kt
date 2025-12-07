@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -57,6 +58,13 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
+    LaunchedEffect(Unit) {
+        sharedViewModel.topBarEvent.collect {
+            if (it is AddTaskEvent)
+                viewModel.saveTask()
+        }
+    }
+
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         sharedViewModel.onAppBarStateChanged(
             AppBar(
@@ -66,6 +74,7 @@ fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
             )
         )
     }
+
     AddTaskContent(viewModel = viewModel)
 }
 

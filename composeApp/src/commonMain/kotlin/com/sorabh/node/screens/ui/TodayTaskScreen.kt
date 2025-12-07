@@ -1,21 +1,30 @@
 package com.sorabh.node.screens.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.sorabh.node.AppViewModel
+import com.sorabh.node.components.EmptyTaskState
+import com.sorabh.node.components.SwipeableTaskCard
+import com.sorabh.node.components.TaskCard
 import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
+import com.sorabh.node.utils.TaskStatus
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 
@@ -23,12 +32,12 @@ import node.composeapp.generated.resources.today_task
 fun TodayTaskScreen(
     sharedViewModel: AppViewModel,
     viewModel: TodayTaskViewModel,
-    navBackStack: NavBackStack<NavKey>
+    onNavigate: (NavKey) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         sharedViewModel.topBarEvent.collect {
             if (it is NavigateEvent)
-                navBackStack.add(it.route)
+                onNavigate(it.route)
         }
     }
 
@@ -41,14 +50,31 @@ fun TodayTaskScreen(
             )
         )
     }
-    TodayTaskContent()
+    TodayTaskContent(viewModel = viewModel, onNavigate = onNavigate)
 }
 
 @Composable
-private fun TodayTaskContent() {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
+private fun TodayTaskContent(viewModel: TodayTaskViewModel, onNavigate: (NavKey) -> Unit) {
+    val todayTasks = viewModel.todayTasks.collectAsState(emptyList()).value
 
+    if (todayTasks.isEmpty())
+        EmptyTaskState {
+            onNavigate(AddTaskNav)
         }
-    }
+    else
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(todayTasks, key = { it.id }) {
+                SwipeableTaskCard(
+                    task = it,
+                    onDelete = viewModel::deleteTask,
+                    onComplete = viewModel::updateTask
+                ) { task ->
+                    TaskCard(task = task)
+                }
+            }
+        }
 }
