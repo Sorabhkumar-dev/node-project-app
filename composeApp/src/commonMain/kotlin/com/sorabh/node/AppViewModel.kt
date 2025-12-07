@@ -5,14 +5,21 @@ import androidx.compose.material.icons.automirrored.rounded.Article
 import androidx.compose.material.icons.rounded.Autorenew
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sorabh.node.pojo.AppBar
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.sorabh.node.utils.TopBarEvent
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 
 class AppViewModel : ViewModel() {
-    val _appBarState = MutableStateFlow<AppBar?>(null)
-    val appBarState = _appBarState.asStateFlow()
+
+    private val _topBarEvent = MutableSharedFlow<TopBarEvent>()
+    val topBarEvent = _topBarEvent.asSharedFlow()
+
+    val appBarState = mutableStateOf<AppBar?>(null)
 
     val bottomBar = listOf(
         Icons.Rounded.Today,
@@ -21,7 +28,11 @@ class AppViewModel : ViewModel() {
         Icons.Rounded.Autorenew
     )
 
+    fun sendEvent(event: TopBarEvent) {
+        viewModelScope.launch { _topBarEvent.emit(event) }
+    }
+
     fun onAppBarStateChanged(appBar: AppBar) {
-        _appBarState.value = appBar
+        appBarState.value = appBar
     }
 }

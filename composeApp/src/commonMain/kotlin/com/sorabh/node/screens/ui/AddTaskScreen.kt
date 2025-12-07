@@ -31,6 +31,7 @@ import com.sorabh.node.components.ShowDatePicker
 import com.sorabh.node.components.ShowTimePicker
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AddTaskViewModel
+import com.sorabh.node.utils.AddTaskEvent
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskType
 import node.composeapp.generated.resources.Res
@@ -60,7 +61,8 @@ fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
         sharedViewModel.onAppBarStateChanged(
             AppBar(
                 title = Res.string.lets_add_something_to_get_done,
-                icon = Icons.Default.Done
+                icon = Icons.Default.Done,
+                event = AddTaskEvent
             )
         )
     }

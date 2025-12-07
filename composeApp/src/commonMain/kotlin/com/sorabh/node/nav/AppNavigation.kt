@@ -29,7 +29,11 @@ fun AppNavigation(
     ) { key ->
         when (key) {
             is TodayTaskNav -> NavEntry(key) {
-                TodayTaskScreen(sharedViewModel = viewModel)
+                TodayTaskScreen(
+                    sharedViewModel = viewModel,
+                    viewModel = koinViewModel(),
+                    navBackStack = navBackStack
+                )
             }
 
             is AllTaskNav -> NavEntry(key) {

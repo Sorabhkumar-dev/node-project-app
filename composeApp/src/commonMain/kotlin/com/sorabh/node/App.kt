@@ -19,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
@@ -61,7 +60,7 @@ fun App() {
     )
 
     val viewModel = koinViewModel<AppViewModel>()
-    val appBarState = viewModel.appBarState.collectAsState()
+    val appBarState = viewModel.appBarState.value
 
     MaterialTheme(colorScheme = BlackAndWhiteScheme) {
         Scaffold(
@@ -71,7 +70,7 @@ fun App() {
                     title = {
                         AnimatedContent(
                             targetState = stringResource(
-                                appBarState.value?.title
+                                appBarState?.title
                                     ?: Res.string.today_task
                             ),
                             transitionSpec = {
@@ -80,15 +79,13 @@ fun App() {
                             },
                             label = ""
                         ) { target ->
-                            Text(
-                                text = target
-                            )
+                            Text(text = target)
                         }
 
                     },
                     actions = {
                         AnimatedContent(
-                            targetState = appBarState.value?.icon,
+                            targetState = appBarState?.icon,
                             transitionSpec = {
                                 slideInVertically { it } + fadeIn() togetherWith
                                         slideOutVertically { -it } + fadeOut()
@@ -96,9 +93,11 @@ fun App() {
                             label = ""
                         ) { target ->
                             IconButton(onClick = {
-                                navController.add(AddTaskNav)
+                                appBarState?.event?.let { event ->
+                                    viewModel.sendEvent(event)
+                                }
                             }) {
-                                if (target != null) {
+                                target?.let {
                                     Icon(
                                         imageVector = target,
                                         contentDescription = null,
