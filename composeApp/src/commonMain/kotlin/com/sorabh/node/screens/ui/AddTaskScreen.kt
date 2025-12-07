@@ -1,13 +1,10 @@
 package com.sorabh.node.screens.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -19,18 +16,20 @@ import androidx.compose.material.icons.filled.Watch
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
+import com.sorabh.node.AppViewModel
 import com.sorabh.node.components.AddInput
 import com.sorabh.node.components.OutlinedDropdown
 import com.sorabh.node.components.ShowDatePicker
 import com.sorabh.node.components.ShowTimePicker
+import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AddTaskViewModel
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskType
@@ -56,7 +55,15 @@ import node.composeapp.generated.resources.when_do_you_want_to_get_this_done
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AddTaskScreen(viewModel: AddTaskViewModel) {
+fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        sharedViewModel.onAppBarStateChanged(
+            AppBar(
+                title = Res.string.lets_add_something_to_get_done,
+                icon = Icons.Default.Done
+            )
+        )
+    }
     AddTaskContent(viewModel = viewModel)
 }
 
@@ -66,23 +73,6 @@ private fun AddTaskContent(viewModel: AddTaskViewModel) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        stickyHeader {
-            Row(
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.onPrimary),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(resource = Res.string.lets_add_something_to_get_done),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                IconButton(onClick = viewModel::saveTask) {
-                    Icon(imageVector = Icons.Default.Done, null, modifier = Modifier.size(36.dp))
-                }
-            }
-        }
-
         item {
             Text(
                 text = stringResource(resource = Res.string.what_do_you_want_to_get_done),

@@ -1,110 +1,138 @@
 package com.sorabh.node
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorabh.node.nav.AddTaskNav
+import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.AppNavigation
+import com.sorabh.node.nav.BottomBarHider
+import com.sorabh.node.nav.ImportantTaskNav
+import com.sorabh.node.nav.RepeatTaskNav
+import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.theme.BlackAndWhiteScheme
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App() {
-    val navController = rememberNavController()
-    val viewModel = koinInject<AppViewModel>()
+    val navController = rememberNavBackStack(
+        configuration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(AllTaskNav::class, AllTaskNav.serializer())
+                    subclass(TodayTaskNav::class, TodayTaskNav.serializer())
+                    subclass(RepeatTaskNav::class, RepeatTaskNav.serializer())
+                    subclass(AddTaskNav::class, AddTaskNav.serializer())
+                    subclass(ImportantTaskNav::class, ImportantTaskNav.serializer())
+                }
+            }
+        },
+        TodayTaskNav
+    )
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-    val currentDestination = navBackStackEntry?.destination
-
-    val isAddTask = currentDestination?.hasRoute<AddTaskNav>() == true
+    val viewModel = koinViewModel<AppViewModel>()
+    val appBarState = viewModel.appBarState.collectAsState()
 
     MaterialTheme(colorScheme = BlackAndWhiteScheme) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                AnimatedVisibility(!isAddTask) {
-                    TopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
-                        title = {
+                TopAppBar(
+                    title = {
+                        AnimatedContent(
+                            targetState = stringResource(
+                                appBarState.value?.title
+                                    ?: Res.string.today_task
+                            ),
+                            transitionSpec = {
+                                slideInVertically { it } + fadeIn() togetherWith
+                                        slideOutVertically { -it } + fadeOut()
+                            },
+                            label = ""
+                        ) { target ->
                             Text(
-                                text = stringResource(
-                                    viewModel.appBarState.collectAsState().value?.title
-                                        ?: Res.string.today_task
-                                ),
-                                color = MaterialTheme.colorScheme.onPrimary
+                                text = target
                             )
-                        })
-                }
+                        }
+
+                    },
+                    actions = {
+                        AnimatedContent(
+                            targetState = appBarState.value?.icon,
+                            transitionSpec = {
+                                slideInVertically { it } + fadeIn() togetherWith
+                                        slideOutVertically { -it } + fadeOut()
+                            },
+                            label = ""
+                        ) { target ->
+                            IconButton(onClick = {
+                                navController.add(AddTaskNav)
+                            }) {
+                                if (target != null) {
+                                    Icon(
+                                        imageVector = target,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(36.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                )
             },
             bottomBar = {
-                AnimatedVisibility(!isAddTask) {
-                    BottomAppBar(
-                        containerColor = MaterialTheme.colorScheme.primary.copy(0.1f),
-                        actions = {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                viewModel.bottomBar.forEach {
-                                    IconButton(onClick = {}) {
+                AnimatedVisibility(navController.last() !is BottomBarHider) {
+                    NavigationBar {
+                        viewModel.bottomBar.forEach {
+                            NavigationBarItem(
+                                selected = false,
+                                icon = {
+                                    IconButton({}) {
                                         Icon(
                                             imageVector = it,
                                             contentDescription = null,
                                             modifier = Modifier.size(30.dp)
                                         )
                                     }
-                                }
-                            }
-                        },
-                        floatingActionButton = {
-                            FloatingActionButton(
-                                onClick = {
-                                    navController.navigate(AddTaskNav)
                                 },
-                                containerColor = MaterialTheme.colorScheme.primary
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    null,
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
+                                onClick = {}
+                            )
                         }
-                    )
+                    }
                 }
             }
         ) {
-            AppNavigation(navController = navController, paddingValues = it)
+            AppNavigation(navBackStack = navController, viewModel = viewModel, paddingValues = it)
         }
     }
 }

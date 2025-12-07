@@ -1,14 +1,15 @@
 package com.sorabh.node.nav
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.ui.NavDisplay
+import com.sorabh.node.AppViewModel
 import com.sorabh.node.screens.ui.AddTaskScreen
 import com.sorabh.node.screens.ui.AllTaskScreen
 import com.sorabh.node.screens.ui.ImportantTaskScreen
@@ -17,33 +18,37 @@ import com.sorabh.node.screens.ui.TodayTaskScreen
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AppNavigation(navController: NavHostController, paddingValues: PaddingValues) {
-    NavHost(
-        navController = navController,
-        startDestination = TodayTaskNav,
-        modifier = Modifier.fillMaxSize()
-            .padding(paddingValues)
-            .padding(horizontal = 16.dp)
-    ) {
-        composable<TodayTaskNav> {
-            TodayTaskScreen()
-        }
+fun AppNavigation(
+    viewModel: AppViewModel,
+    navBackStack: NavBackStack<NavKey>,
+    paddingValues: PaddingValues
+) {
+    NavDisplay(
+        backStack = navBackStack,
+        modifier = Modifier.padding(paddingValues).padding(horizontal = 16.dp)
+    ) { key ->
+        when (key) {
+            is TodayTaskNav -> NavEntry(key) {
+                TodayTaskScreen(sharedViewModel = viewModel)
+            }
 
-        composable<AllTaskNav> {
-            AllTaskScreen()
-        }
+            is AllTaskNav -> NavEntry(key) {
+                AllTaskScreen()
+            }
 
-        composable<RepeatTaskNav> {
-            RepeatTaskScreen()
-        }
+            is RepeatTaskNav -> NavEntry(key) {
+                RepeatTaskScreen()
+            }
 
-        composable<AddTaskNav> {
-            AddTaskScreen(viewModel = koinViewModel())
-        }
+            is AddTaskNav -> NavEntry(key) {
+                AddTaskScreen(viewModel = koinViewModel(), sharedViewModel = viewModel)
+            }
 
-        composable<ImportantTaskNav> {
-            ImportantTaskScreen()
-        }
+            is ImportantTaskNav -> NavEntry(key) {
+                ImportantTaskScreen()
+            }
 
+            else -> throw Exception("Unknown route")
+        }
     }
 }

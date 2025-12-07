@@ -14,6 +14,7 @@ val AbsoluteBlack = Color(0xFF000000)
     // Main brand color (used for Buttons, etc.)
     primary = AbsoluteBlack,
     onPrimary = AbsoluteWhite, // Text on top of primary
+    primaryContainer = Color(0xFFE5E4E2),
 
     // Secondary accents
     secondary = AbsoluteBlack,
@@ -26,6 +27,7 @@ val AbsoluteBlack = Color(0xFF000000)
     // Surface (Cards, Sheets, Menus)
     surface = AbsoluteWhite,
     onSurface = AbsoluteBlack, // Text on surface
+    surfaceContainer = Color(0xFFE5E4E2).copy(0.5f),
 
     // Error states (keeping it monochrome)
     error = AbsoluteBlack,

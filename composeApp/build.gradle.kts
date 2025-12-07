@@ -34,7 +34,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-            implementation(libs.compose.nav3)
+//            implementation(libs.compose.nav3)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -53,6 +53,10 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.compose.viewmodel.navigation)
+
+            implementation(libs.jetbrains.navigation3.ui)
+//            implementation(libs.jetbrains.lifecycle.viewmodel.nav3)
+            implementation(libs.jetbrains.lifecycle.viewmodel)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

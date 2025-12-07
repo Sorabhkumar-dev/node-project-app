@@ -1,10 +1,10 @@
 package com.sorabh.node
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.NotificationImportant
-import androidx.compose.material.icons.filled.Replay
-import androidx.compose.material.icons.filled.Task
-import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.automirrored.rounded.Article
+import androidx.compose.material.icons.rounded.Autorenew
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.Today
 import androidx.lifecycle.ViewModel
 import com.sorabh.node.pojo.AppBar
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +15,10 @@ class AppViewModel : ViewModel() {
     val appBarState = _appBarState.asStateFlow()
 
     val bottomBar = listOf(
-        Icons.Default.Today,
-        Icons.Default.NotificationImportant,
-        Icons.Default.Task,
-        Icons.Default.Replay
+        Icons.Rounded.Today,
+        Icons.Rounded.Star,
+        Icons.AutoMirrored.Rounded.Article,
+        Icons.Rounded.Autorenew
     )
 
     fun onAppBarStateChanged(appBar: AppBar) {

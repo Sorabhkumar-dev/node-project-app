@@ -1,18 +1,25 @@
 package com.sorabh.node.nav
 
+import androidx.navigation3.runtime.NavKey as LibNavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object AllTaskNav
+sealed interface NavKey : LibNavKey
 
 @Serializable
-object TodayTaskNav
+sealed interface BottomBarHider
 
 @Serializable
-data object RepeatTaskNav
+data object AllTaskNav : NavKey
 
 @Serializable
-data object AddTaskNav
+data object TodayTaskNav : NavKey
 
 @Serializable
-data object ImportantTaskNav
+data object RepeatTaskNav : NavKey
+
+@Serializable
+data object AddTaskNav : NavKey
+
+@Serializable
+data object ImportantTaskNav : NavKey
