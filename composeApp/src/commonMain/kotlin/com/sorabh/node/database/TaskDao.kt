@@ -20,7 +20,10 @@ interface TaskDao {
     @Delete
     suspend fun deleteTask(task: TaskEntity)
 
-    @Query(" SELECT * FROM TaskEntity WHERE dateTime BETWEEN :start AND :end")
+    @Query("SELECT EXISTS(SELECT * FROM TaskEntity WHERE title = :title)")
+    fun isTitleExists(title: String): Boolean
+
+    @Query(" SELECT * FROM TaskEntity WHERE dateTime BETWEEN :start AND :end ORDER BY dateTime DESC")
     fun getTodayTasks(start: LocalDateTime, end: LocalDateTime): Flow<List<TaskEntity>>
 
     @Query("SELECT * FROM TaskEntity WHERE id = :id")

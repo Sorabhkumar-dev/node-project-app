@@ -1,5 +1,8 @@
 package com.sorabh.node.screens.viewmodels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -7,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.database.TaskRepository
 import com.sorabh.node.utils.RepeatType
+import com.sorabh.node.utils.ShowSnackBarEvent
+import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -108,15 +113,15 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
         selectedTaskCategory.value = taskType
     }
 
-    fun onTaskRepeatableChanged(isRepeatable: Boolean){
+    fun onTaskRepeatableChanged(isRepeatable: Boolean) {
         isTaskRepeatable.value = isRepeatable
     }
 
-    fun onRepeatTypeSelected(repeatType: RepeatType){
+    fun onRepeatTypeSelected(repeatType: RepeatType) {
         selectRepeatType.value = repeatType
     }
 
-    fun saveTask() {
+    fun saveTask(sendSnackBarEvent: (SnackBarEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskEntity(
                 title = taskTitle.value.text,
@@ -127,8 +132,12 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
                 isRepeatable = isTaskRepeatable.value,
                 repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null
             )
-            taskRepository.insertTask(task)
+            if (taskRepository.isTitleExists(task.title))
+                sendSnackBarEvent(ShowSnackBarEvent("Task Already Exists", Icons.Default.Close))
+            else {
+                taskRepository.insertTask(task)
+                sendSnackBarEvent(ShowSnackBarEvent("Task \"${task.title}\" Added",Icons.Default.Done))
+            }
         }
     }
-
 }

@@ -8,6 +8,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,8 +27,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
@@ -57,6 +62,7 @@ fun App() {
     val viewModel = koinViewModel<AppViewModel>()
     val appBarState = viewModel.appBarState.value
     val snackBarEvent = viewModel.snackBarEvent
+    val snackBarIcon = remember { mutableStateOf<ImageVector?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -77,7 +83,10 @@ fun App() {
         snackBarEvent.collect {
             when (it) {
                 DismissSnackBarEvent -> snackBarHostState.currentSnackbarData?.dismiss()
-                is ShowSnackBarEvent -> snackBarHostState.showSnackbar(it.message)
+                is ShowSnackBarEvent -> {
+                    snackBarIcon.value = it.icon
+                    snackBarHostState.showSnackbar(it.message)
+                }
             }
         }
     }
@@ -156,12 +165,27 @@ fun App() {
                     modifier = Modifier.fillMaxWidth()
                         .background(MaterialTheme.colorScheme.onBackground)
                 ) {
-                    Text(
-                        text = it.visuals.message,
-                        color = MaterialTheme.colorScheme.background,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = it.visuals.message,
+                            color = MaterialTheme.colorScheme.background,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
+
+                        snackBarIcon.value?.let { imageVector ->
+                            Icon(
+                                imageVector = imageVector,
+                                contentDescription = null,
+
+                                tint = MaterialTheme.colorScheme.background
+                            )
+                        }
+                    }
                 }
             }
         ) {

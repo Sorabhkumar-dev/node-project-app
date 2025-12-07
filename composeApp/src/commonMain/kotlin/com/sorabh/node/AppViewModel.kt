@@ -2,7 +2,6 @@ package com.sorabh.node
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Article
-import androidx.compose.material.icons.rounded.Autorenew
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today

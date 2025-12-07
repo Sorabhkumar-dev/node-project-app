@@ -3,7 +3,6 @@ package com.sorabh.node.screens.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -24,7 +23,6 @@ import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
-import com.sorabh.node.utils.TaskStatus
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 

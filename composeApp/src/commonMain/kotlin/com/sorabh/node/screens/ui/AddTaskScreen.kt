@@ -2,6 +2,7 @@ package com.sorabh.node.screens.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,15 +12,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Watch
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
@@ -72,11 +76,15 @@ fun AddTaskScreen(
         sharedViewModel.topBarEvent.collect {
             if (it is AddTaskEvent)
                 if (viewModel.taskTitle.value.text.isBlank())
-                    sendSnackBarEvent(ShowSnackBarEvent("Add Something to Progress!"))
+                    sendSnackBarEvent(
+                        ShowSnackBarEvent(
+                            "Add Something to Progress!",
+                            Icons.Default.Close
+                        )
+                    )
                 else {
                     keyboard?.hide()
-                    viewModel.saveTask()
-                    sendSnackBarEvent(ShowSnackBarEvent("Task \"${viewModel.taskTitle.value.text}\" Added"))
+                    viewModel.saveTask(sendSnackBarEvent = sendSnackBarEvent)
                 }
         }
     }
@@ -216,22 +224,6 @@ private fun AddTaskContent(
 
             item {
                 Text(
-                    text = stringResource(resource = Res.string.tap_to_prioritize),
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                OutlinedDropdown(
-                    label = stringResource(Res.string.important_task),
-                    items = listOf(true, false),
-                    selectedItem = viewModel.isTaskPriority.value,
-                    onItemSelected = viewModel::onTaskPriorityChanged
-                )
-            }
-
-            item {
-                Text(
                     text = stringResource(resource = Res.string.group_tasks_that_move_your_goals_forward),
                     fontWeight = FontWeight.SemiBold
                 )
@@ -249,18 +241,35 @@ private fun AddTaskContent(
 
             item {
                 Text(
+                    text = stringResource(resource = Res.string.tap_to_prioritize),
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(5.dp))
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Switch(
+                        checked = viewModel.isTaskPriority.value,
+                        onCheckedChange = viewModel::onTaskPriorityChanged
+                    )
+                    Text(text = stringResource(Res.string.important_task))
+                }
+            }
+
+            item {
+                Text(
                     text = stringResource(resource = Res.string.do_you_want_to_return_this_task),
                     fontWeight = FontWeight.SemiBold
                 )
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                OutlinedDropdown(
-                    label = stringResource(Res.string.should_this_task_repeat),
-                    items = listOf(true, false),
-                    selectedItem = viewModel.isTaskRepeatable.value,
-                    onItemSelected = viewModel::onTaskRepeatableChanged
-                )
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Switch(
+                        checked = viewModel.isTaskRepeatable.value,
+                        onCheckedChange = viewModel::onTaskRepeatableChanged
+                    )
+                    Text(text = stringResource(Res.string.should_this_task_repeat))
+                }
             }
 
             if (viewModel.isTaskRepeatable.value)
@@ -285,11 +294,15 @@ private fun AddTaskContent(
                 Button(
                     onClick = {
                         if (viewModel.taskTitle.value.text.isBlank())
-                            sendSnackBarEvent(ShowSnackBarEvent("Add Something to Progress!"))
+                            sendSnackBarEvent(
+                                ShowSnackBarEvent(
+                                    "Add Something to Progress!",
+                                    Icons.Default.Close
+                                )
+                            )
                         else {
                             keyboard?.hide()
-                            viewModel.saveTask()
-                            sendSnackBarEvent(ShowSnackBarEvent("Task \"${viewModel.taskTitle.value.text}\" Added"))
+                            viewModel.saveTask(sendSnackBarEvent = sendSnackBarEvent)
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
