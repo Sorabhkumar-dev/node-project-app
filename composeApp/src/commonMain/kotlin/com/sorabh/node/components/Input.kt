@@ -129,7 +129,8 @@ fun <T> OutlinedDropdown(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-        ) {
+            containerColor = MaterialTheme.colorScheme.background
+            ) {
             items.forEach { item ->
                 DropdownMenuItem(
                     text = {

@@ -19,7 +19,7 @@ data object TodayTaskNav : NavKey
 data object RepeatTaskNav : NavKey
 
 @Serializable
-data object AddTaskNav : NavKey
+data object AddTaskNav : NavKey, BottomBarHider
 
 @Serializable
 data object ImportantTaskNav : NavKey

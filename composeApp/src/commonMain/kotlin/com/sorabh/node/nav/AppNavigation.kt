@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -49,7 +48,12 @@ fun AppNavigation(
             }
 
             is AddTaskNav -> NavEntry(key) {
-                AddTaskScreen(viewModel = koinViewModel(), sharedViewModel = viewModel)
+                AddTaskScreen(
+                    viewModel = koinViewModel(),
+                    sharedViewModel = viewModel,
+                    sendSnackBarEvent = viewModel::sendEvent,
+                    sendTopBarEvent = viewModel::onAppBarStateChanged
+                )
             }
 
             is ImportantTaskNav -> NavEntry(key) {

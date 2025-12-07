@@ -1,6 +1,7 @@
 package com.sorabh.node.screens.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Watch
@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -34,6 +35,8 @@ import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AddTaskViewModel
 import com.sorabh.node.utils.AddTaskEvent
 import com.sorabh.node.utils.RepeatType
+import com.sorabh.node.utils.ShowSnackBarEvent
+import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskType
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.add_a_task
@@ -57,16 +60,29 @@ import node.composeapp.generated.resources.when_do_you_want_to_get_this_done
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
+fun AddTaskScreen(
+    viewModel: AddTaskViewModel,
+    sharedViewModel: AppViewModel,
+    sendTopBarEvent: (AppBar) -> Unit,
+    sendSnackBarEvent: (SnackBarEvent) -> Unit
+) {
+    val keyboard = LocalSoftwareKeyboardController.current
+
     LaunchedEffect(Unit) {
         sharedViewModel.topBarEvent.collect {
             if (it is AddTaskEvent)
-                viewModel.saveTask()
+                if (viewModel.taskTitle.value.text.isBlank())
+                    sendSnackBarEvent(ShowSnackBarEvent("Add Something to Progress!"))
+                else {
+                    keyboard?.hide()
+                    viewModel.saveTask()
+                    sendSnackBarEvent(ShowSnackBarEvent("Task \"${viewModel.taskTitle.value.text}\" Added"))
+                }
         }
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        sharedViewModel.onAppBarStateChanged(
+        sendTopBarEvent(
             AppBar(
                 title = Res.string.lets_add_something_to_get_done,
                 icon = Icons.Default.Done,
@@ -75,14 +91,21 @@ fun AddTaskScreen(viewModel: AddTaskViewModel, sharedViewModel: AppViewModel) {
         )
     }
 
-    AddTaskContent(viewModel = viewModel)
+    AddTaskContent(viewModel = viewModel, sendSnackBarEvent = sendSnackBarEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddTaskContent(viewModel: AddTaskViewModel) {
+private fun AddTaskContent(
+    viewModel: AddTaskViewModel,
+    sendSnackBarEvent: (SnackBarEvent) -> Unit
+) {
+    val keyboard = LocalSoftwareKeyboardController.current
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(24.dp)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             Text(
@@ -112,7 +135,7 @@ private fun AddTaskContent(viewModel: AddTaskViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 label = Res.string.what_the_task,
                 minLines = 3,
-                maxLines = 3,
+                maxLines = 10,
                 textFieldValue = viewModel.taskDescription.value,
                 onValueChange = viewModel::onTaskDescriptionChanged
             )
@@ -260,11 +283,19 @@ private fun AddTaskContent(viewModel: AddTaskViewModel) {
 
             item {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (viewModel.taskTitle.value.text.isBlank())
+                            sendSnackBarEvent(ShowSnackBarEvent("Add Something to Progress!"))
+                        else {
+                            keyboard?.hide()
+                            viewModel.saveTask()
+                            sendSnackBarEvent(ShowSnackBarEvent("Task \"${viewModel.taskTitle.value.text}\" Added"))
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.small
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                    Icon(imageVector = Icons.Default.Done, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = stringResource(Res.string.add_task))
                 }

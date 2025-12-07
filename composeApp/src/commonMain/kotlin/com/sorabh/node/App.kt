@@ -7,7 +7,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,10 +19,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -32,6 +40,8 @@ import com.sorabh.node.nav.ImportantTaskNav
 import com.sorabh.node.nav.RepeatTaskNav
 import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.theme.BlackAndWhiteScheme
+import com.sorabh.node.utils.DismissSnackBarEvent
+import com.sorabh.node.utils.ShowSnackBarEvent
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import node.composeapp.generated.resources.Res
@@ -44,6 +54,10 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 @Preview
 fun App() {
+    val viewModel = koinViewModel<AppViewModel>()
+    val appBarState = viewModel.appBarState.value
+    val snackBarEvent = viewModel.snackBarEvent
+    val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavBackStack(
         configuration = SavedStateConfiguration {
             serializersModule = SerializersModule {
@@ -59,8 +73,14 @@ fun App() {
         TodayTaskNav
     )
 
-    val viewModel = koinViewModel<AppViewModel>()
-    val appBarState = viewModel.appBarState.value
+    LaunchedEffect(Unit) {
+        snackBarEvent.collect {
+            when (it) {
+                DismissSnackBarEvent -> snackBarHostState.currentSnackbarData?.dismiss()
+                is ShowSnackBarEvent -> snackBarHostState.showSnackbar(it.message)
+            }
+        }
+    }
 
     MaterialTheme(colorScheme = BlackAndWhiteScheme) {
         Scaffold(
@@ -128,6 +148,20 @@ fun App() {
                             )
                         }
                     }
+                }
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackBarHostState,
+                    modifier = Modifier.fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.onBackground)
+                ) {
+                    Text(
+                        text = it.visuals.message,
+                        color = MaterialTheme.colorScheme.background,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
+                    )
                 }
             }
         ) {
