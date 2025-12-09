@@ -1,14 +1,17 @@
 package com.sorabh.node.screens.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -45,22 +48,17 @@ import com.sorabh.node.utils.TaskType
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.add_a_task
 import node.composeapp.generated.resources.add_more_info
+import node.composeapp.generated.resources.add_new_task
 import node.composeapp.generated.resources.add_task
-import node.composeapp.generated.resources.choose_a_category
-import node.composeapp.generated.resources.choose_a_day_to_take_action
-import node.composeapp.generated.resources.choose_recurrence
-import node.composeapp.generated.resources.do_you_want_to_return_this_task
-import node.composeapp.generated.resources.give_your_task_its_perfect_moment
-import node.composeapp.generated.resources.group_tasks_that_move_your_goals_forward
-import node.composeapp.generated.resources.important_task_optional
-import node.composeapp.generated.resources.lets_add_something_to_get_done
-import node.composeapp.generated.resources.recurring_task
-import node.composeapp.generated.resources.should_this_task_repeat
-import node.composeapp.generated.resources.tap_to_prioritize
-import node.composeapp.generated.resources.what_do_you_want_to_accomplish
-import node.composeapp.generated.resources.what_do_you_want_to_get_done
-import node.composeapp.generated.resources.what_the_task
-import node.composeapp.generated.resources.when_do_you_want_to_get_this_done
+import node.composeapp.generated.resources.description
+import node.composeapp.generated.resources.mark_as_important
+import node.composeapp.generated.resources.repeat
+import node.composeapp.generated.resources.repeating_task
+import node.composeapp.generated.resources.select_category
+import node.composeapp.generated.resources.select_date
+import node.composeapp.generated.resources.select_time
+import node.composeapp.generated.resources.task_description
+import node.composeapp.generated.resources.title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -92,7 +90,7 @@ fun AddTaskScreen(
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         sendTopBarEvent(
             AppBar(
-                title = Res.string.lets_add_something_to_get_done,
+                title = Res.string.add_new_task,
                 icon = Icons.Default.Done,
                 event = AddTaskEvent
             )
@@ -110,71 +108,72 @@ private fun AddTaskContent(
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Column(
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
     ) {
-        item {
-            Text(
-                text = stringResource(resource = Res.string.what_do_you_want_to_get_done),
-                fontWeight = FontWeight.SemiBold
-            )
 
-            Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = stringResource(resource = Res.string.title),
+            fontWeight = FontWeight.SemiBold
+        )
 
-            AddInput(
+        Spacer(modifier = Modifier.height(2.dp))
+
+        AddInput(
+            modifier = Modifier.fillMaxWidth(),
+            placeHolder = Res.string.add_a_task,
+            textFieldValue = viewModel.taskTitle.value,
+            onValueChange = viewModel::onTaskTitleChanged
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(resource = Res.string.description),
+            fontWeight = FontWeight.SemiBold
+        )
+
+        Spacer(modifier = Modifier.height(2.dp))
+
+        AddInput(
+            modifier = Modifier.fillMaxWidth(),
+            placeHolder = Res.string.task_description,
+            minLines = 4,
+            maxLines = 10,
+            textFieldValue = viewModel.taskDescription.value,
+            onValueChange = viewModel::onTaskDescriptionChanged
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+
+
+        AnimatedVisibility(!viewModel.isAddMoreInfo.value) {
+            Button(
+                onClick = {
+                    viewModel.addMoreInfo(true)
+                },
                 modifier = Modifier.fillMaxWidth(),
-                label = Res.string.add_a_task,
-                textFieldValue = viewModel.taskTitle.value,
-                onValueChange = viewModel::onTaskTitleChanged
-            )
-        }
-
-        item {
-            Text(
-                text = stringResource(resource = Res.string.what_do_you_want_to_accomplish),
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            AddInput(
-                modifier = Modifier.fillMaxWidth(),
-                label = Res.string.what_the_task,
-                minLines = 3,
-                maxLines = 10,
-                textFieldValue = viewModel.taskDescription.value,
-                onValueChange = viewModel::onTaskDescriptionChanged
-            )
-        }
-
-        if (!viewModel.isAddMoreInfo.value)
-            item {
-                Button(
-                    onClick = {
-                        viewModel.addMoreInfo(true)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(text = stringResource(Res.string.add_more_info))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = null
-                    )
-                }
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(text = stringResource(Res.string.add_more_info))
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null
+                )
             }
 
-        if (viewModel.isAddMoreInfo.value) {
-            item {
+        }
+
+        AnimatedVisibility(viewModel.isAddMoreInfo.value) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = stringResource(resource = Res.string.when_do_you_want_to_get_this_done),
+                    text = stringResource(resource = Res.string.select_date),
                     fontWeight = FontWeight.SemiBold
                 )
-
-                Spacer(modifier = Modifier.height(5.dp))
 
                 AddInput(
                     modifier = Modifier.fillMaxWidth(),
@@ -182,7 +181,6 @@ private fun AddTaskContent(
                     onIconBtnClick = {
                         viewModel.onDatePickerStateChanged(true)
                     },
-                    label = Res.string.choose_a_day_to_take_action,
                     text = viewModel.dateFormatter.format(viewModel.taskDate.value)
                 )
 
@@ -193,15 +191,14 @@ private fun AddTaskContent(
                     viewModel.onDatePickerStateChanged()
                     viewModel.onTaskDateChanged(it)
                 }
-            }
 
-            item {
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = stringResource(resource = Res.string.when_do_you_want_to_get_this_done),
+                    text = stringResource(resource = Res.string.select_time),
                     fontWeight = FontWeight.SemiBold
                 )
 
-                Spacer(modifier = Modifier.height(5.dp))
 
                 AddInput(
                     modifier = Modifier.fillMaxWidth(),
@@ -209,7 +206,6 @@ private fun AddTaskContent(
                     onIconBtnClick = {
                         viewModel.onTimePickerStateChanged(true)
                     },
-                    label = Res.string.give_your_task_its_perfect_moment,
                     text = viewModel.timeFormatter.format(viewModel.taskTime.value)
                 )
 
@@ -220,77 +216,82 @@ private fun AddTaskContent(
                     viewModel.onTimePickerStateChanged()
                     viewModel.onTaskTimeChanged(it.hour, it.minute)
                 }
-            }
 
-            item {
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = stringResource(resource = Res.string.group_tasks_that_move_your_goals_forward),
+                    text = stringResource(resource = Res.string.select_category),
                     fontWeight = FontWeight.SemiBold
                 )
 
-                Spacer(modifier = Modifier.height(5.dp))
 
                 OutlinedDropdown(
-                    label = stringResource(Res.string.choose_a_category),
                     items = TaskType.entries.toList(),
                     itemLabel = { it.value },
                     selectedItem = viewModel.selectedTaskCategory.value,
                     onItemSelected = viewModel::onTaskCategorySelected
                 )
-            }
 
-            item {
-                Text(
-                    text = stringResource(resource = Res.string.tap_to_prioritize),
-                    fontWeight = FontWeight.SemiBold
-                )
 
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(Res.string.mark_as_important),
+                        fontWeight = FontWeight.SemiBold
+                    )
+
                     Switch(
                         checked = viewModel.isTaskPriority.value,
                         onCheckedChange = viewModel::onTaskPriorityChanged
                     )
-                    Text(text = stringResource(Res.string.important_task_optional))
                 }
-            }
 
-            item {
-                Text(
-                    text = stringResource(resource = Res.string.do_you_want_to_return_this_task),
-                    fontWeight = FontWeight.SemiBold
-                )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(5.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(Res.string.repeating_task),
+                        fontWeight = FontWeight.SemiBold
+                    )
 
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Switch(
                         checked = viewModel.isTaskRepeatable.value,
                         onCheckedChange = viewModel::onTaskRepeatableChanged
                     )
-                    Text(text = stringResource(Res.string.should_this_task_repeat))
-                }
-            }
-
-            if (viewModel.isTaskRepeatable.value)
-                item {
-                    Text(
-                        text = stringResource(resource = Res.string.recurring_task),
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Spacer(modifier = Modifier.height(5.dp))
-
-                    OutlinedDropdown(
-                        label = stringResource(Res.string.choose_recurrence),
-                        items = RepeatType.entries.toList(),
-                        itemLabel = { it.value },
-                        selectedItem = viewModel.selectRepeatType.value,
-                        onItemSelected = viewModel::onRepeatTypeSelected
-                    )
                 }
 
-            item {
+
+                AnimatedVisibility(viewModel.isTaskRepeatable.value) {
+                    Column {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(resource = Res.string.repeat),
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(modifier = Modifier.height(2.dp))
+
+                        OutlinedDropdown(
+                            items = RepeatType.entries.toList(),
+                            itemLabel = { it.value },
+                            selectedItem = viewModel.selectRepeatType.value,
+                            onItemSelected = viewModel::onRepeatTypeSelected
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Button(
                     onClick = {
                         if (viewModel.taskTitle.value.text.isBlank())
@@ -314,6 +315,5 @@ private fun AddTaskContent(
                 }
             }
         }
-
     }
 }

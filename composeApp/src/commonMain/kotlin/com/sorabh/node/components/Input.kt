@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun AddInput(
     modifier: Modifier,
-    label: StringResource,
+    placeHolder: StringResource,
     maxLines: Int = 1,
     minLines: Int = 1,
     readOnly: Boolean = false,
@@ -42,9 +42,9 @@ fun AddInput(
         minLines = minLines,
         onValueChange = onValueChange,
         readOnly = readOnly,
-        label = {
+        placeholder = {
             Text(
-                text = stringResource(label),
+                text = stringResource(placeHolder),
                 style = MaterialTheme.typography.bodyMedium
             )
         },
@@ -61,7 +61,7 @@ fun AddInput(
 @Composable
 fun AddInput(
     modifier: Modifier,
-    label: StringResource,
+    label: StringResource? = null,
     maxLines: Int = 1,
     readOnly: Boolean = false,
     imageVector: ImageVector? = null,
@@ -76,15 +76,17 @@ fun AddInput(
         readOnly = readOnly,
         maxLines = maxLines,
         label = {
-            Text(
-                text = stringResource(label),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            label?.let {
+                Text(
+                    text = stringResource(label),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         },
-        trailingIcon = {
+        leadingIcon = {
             imageVector?.let {
                 IconButton(onClick = onIconBtnClick) {
-                    Icon(imageVector = it, null)
+                    Icon(imageVector = it, null, tint = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -96,13 +98,13 @@ fun AddInput(
 @Composable
 fun <T> OutlinedDropdown(
     modifier: Modifier = Modifier,
-    label: String,
+    label: String? = null,
     items: List<T>,
     selectedItem: T?,
     // Helper to convert your object T to a String for display
     itemLabel: (T) -> String = { it.toString() },
     onItemSelected: (T) -> Unit,
-    ) {
+) {
     var expanded by remember { mutableStateOf(false) }
 
     // We use ExposedDropdownMenuBox for the standard M3 behavior
@@ -115,7 +117,7 @@ fun <T> OutlinedDropdown(
             value = selectedItem?.let { itemLabel(it) } ?: "",
             onValueChange = {}, // Read only, value changes via selection
             readOnly = true,
-            label = { Text(text = label) },
+            label = { label?.let { Text(text = label) } },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
@@ -130,7 +132,7 @@ fun <T> OutlinedDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             containerColor = MaterialTheme.colorScheme.background
-            ) {
+        ) {
             items.forEach { item ->
                 DropdownMenuItem(
                     text = {
