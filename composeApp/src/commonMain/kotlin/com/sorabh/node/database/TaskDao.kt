@@ -23,6 +23,9 @@ interface TaskDao {
     @Query("SELECT EXISTS(SELECT * FROM TaskEntity WHERE title = :title)")
     fun isTitleExists(title: String): Boolean
 
+    @Query("SELECT * FROM TaskEntity")
+    fun getAllTask(): Flow<List<TaskEntity>>
+
     @Query("SELECT * FROM TaskEntity WHERE isImportant = 1 ORDER BY dateTime DESC")
     fun getImportantTasks(): Flow<List<TaskEntity>>
 
