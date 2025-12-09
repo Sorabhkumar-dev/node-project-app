@@ -23,10 +23,13 @@ interface TaskDao {
     @Query("SELECT EXISTS(SELECT * FROM TaskEntity WHERE title = :title)")
     fun isTitleExists(title: String): Boolean
 
+    @Query("SELECT * FROM TaskEntity WHERE isRepeatable = 1")
+    fun getRepeatingTasks(): Flow<List<TaskEntity>>
+
     @Query("SELECT * FROM TaskEntity")
     fun getAllTask(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM TaskEntity WHERE isImportant = 1 ORDER BY dateTime DESC")
+    @Query("SELECT * FROM TaskEntity WHERE isImportant = 1")
     fun getImportantTasks(): Flow<List<TaskEntity>>
 
     @Query(" SELECT * FROM TaskEntity WHERE dateTime BETWEEN :start AND :end ORDER BY dateTime DESC")

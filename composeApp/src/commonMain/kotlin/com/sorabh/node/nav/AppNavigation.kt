@@ -50,7 +50,12 @@ fun AppNavigation(
             }
 
             is RepeatTaskNav -> NavEntry(key) {
-                RepeatTaskScreen()
+                RepeatTaskScreen(
+                    viewModel = koinViewModel(),
+                    sharedViewModel = viewModel,
+                    onNavigate = onNavigate,
+                    onAppBarChanged = viewModel::onAppBarChanged
+                )
             }
 
             is AddTaskNav -> NavEntry(key) {

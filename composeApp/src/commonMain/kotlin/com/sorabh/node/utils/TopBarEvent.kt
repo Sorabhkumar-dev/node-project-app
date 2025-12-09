@@ -1,6 +1,7 @@
 package com.sorabh.node.utils
 
-import com.sorabh.node.nav.NavKey
+import androidx.navigation3.runtime.NavKey
+
 
 sealed interface TopBarEvent
 

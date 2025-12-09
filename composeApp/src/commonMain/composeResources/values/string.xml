@@ -2,6 +2,7 @@
     <string name="today_task">Today Task</string>
     <string name="important_task">Important Task</string>
     <string name="all_task">All Task</string>
+    <string name="repeating_task">Repeating Task</string>
 
     <string name="cancel">Cancel</string>
     <string name="okay">Okay</string>
