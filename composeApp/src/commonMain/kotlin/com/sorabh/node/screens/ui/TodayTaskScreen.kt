@@ -30,6 +30,7 @@ import node.composeapp.generated.resources.today_task
 fun TodayTaskScreen(
     sharedViewModel: AppViewModel,
     viewModel: TodayTaskViewModel,
+    onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -40,7 +41,7 @@ fun TodayTaskScreen(
     }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        sharedViewModel.onAppBarStateChanged(
+        onAppBarChanged(
             AppBar(
                 title = Res.string.today_task,
                 icon = Icons.Default.Add,

@@ -35,6 +35,7 @@ fun AppNavigation(
                 TodayTaskScreen(
                     sharedViewModel = viewModel,
                     viewModel = koinViewModel(),
+                    onAppBarChanged = viewModel::onAppBarChanged,
                     onNavigate = onNavigate
                 )
             }
@@ -52,12 +53,17 @@ fun AppNavigation(
                     viewModel = koinViewModel(),
                     sharedViewModel = viewModel,
                     sendSnackBarEvent = viewModel::sendEvent,
-                    sendTopBarEvent = viewModel::onAppBarStateChanged
+                    sendTopBarEvent = viewModel::onAppBarChanged
                 )
             }
 
             is ImportantTaskNav -> NavEntry(key) {
-                ImportantTaskScreen()
+                ImportantTaskScreen(
+                    viewModel = koinViewModel(),
+                    sharedViewModel = viewModel,
+                    onAppBarChanged = viewModel::onAppBarChanged,
+                    onNavigate = onNavigate
+                )
             }
 
             else -> throw Exception("Unknown route")

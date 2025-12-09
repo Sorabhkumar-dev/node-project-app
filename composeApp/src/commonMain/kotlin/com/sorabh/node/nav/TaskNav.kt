@@ -10,16 +10,19 @@ sealed interface NavKey : LibNavKey
 sealed interface BottomBarHider
 
 @Serializable
-data object AllTaskNav : NavKey
+sealed interface BottomBar
 
 @Serializable
-data object TodayTaskNav : NavKey
+data object AllTaskNav : NavKey, BottomBar
 
 @Serializable
-data object RepeatTaskNav : NavKey
+data object TodayTaskNav : NavKey, BottomBar
+
+@Serializable
+data object RepeatTaskNav : NavKey, BottomBar
 
 @Serializable
 data object AddTaskNav : NavKey, BottomBarHider
 
 @Serializable
-data object ImportantTaskNav : NavKey
+data object ImportantTaskNav : NavKey, BottomBar

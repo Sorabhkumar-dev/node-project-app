@@ -52,7 +52,7 @@ import node.composeapp.generated.resources.choose_recurrence
 import node.composeapp.generated.resources.do_you_want_to_return_this_task
 import node.composeapp.generated.resources.give_your_task_its_perfect_moment
 import node.composeapp.generated.resources.group_tasks_that_move_your_goals_forward
-import node.composeapp.generated.resources.important_task
+import node.composeapp.generated.resources.important_task_optional
 import node.composeapp.generated.resources.lets_add_something_to_get_done
 import node.composeapp.generated.resources.recurring_task
 import node.composeapp.generated.resources.should_this_task_repeat
@@ -251,7 +251,7 @@ private fun AddTaskContent(
                         checked = viewModel.isTaskPriority.value,
                         onCheckedChange = viewModel::onTaskPriorityChanged
                     )
-                    Text(text = stringResource(Res.string.important_task))
+                    Text(text = stringResource(Res.string.important_task_optional))
                 }
             }
 

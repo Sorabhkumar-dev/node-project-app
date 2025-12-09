@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +42,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.AppNavigation
+import com.sorabh.node.nav.BottomBar
 import com.sorabh.node.nav.BottomBarHider
 import com.sorabh.node.nav.ImportantTaskNav
 import com.sorabh.node.nav.RepeatTaskNav
@@ -76,7 +79,7 @@ fun App() {
                 }
             }
         },
-        TodayTaskNav
+        viewModel.bottomBar[Icons.Rounded.Today]!!
     )
 
     LaunchedEffect(Unit) {
@@ -143,17 +146,23 @@ fun App() {
                     NavigationBar {
                         viewModel.bottomBar.forEach {
                             NavigationBarItem(
-                                selected = false,
+                                selected = it.value == navController.last(),
                                 icon = {
-                                    IconButton({}) {
-                                        Icon(
-                                            imageVector = it,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(30.dp)
-                                        )
-                                    }
+                                    Icon(
+                                        imageVector = it.key,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(30.dp)
+                                    )
                                 },
-                                onClick = {}
+                                onClick = {
+                                    if (navController.last() is BottomBar)
+                                        if (!navController.contains(it.value))
+                                            navController.add(it.value)
+                                        else if (navController.last() != it.value) {
+                                            if (navController.remove(it.value))
+                                                navController.add(it.value)
+                                        }
+                                }
                             )
                         }
                     }

@@ -1,5 +1,7 @@
 <resources>
     <string name="today_task">Today Task</string>
+    <string name="important_task">Important Task</string>
+    <string name="all_task">All Task</string>
 
     <string name="cancel">Cancel</string>
     <string name="okay">Okay</string>
@@ -20,7 +22,7 @@
     <string name="give_your_task_its_perfect_moment">Give your task its perfect moment(optional)</string>
 
     <string name="tap_to_prioritize">Tap to Prioritize</string>
-    <string name="important_task">Important Task(optional)</string>
+    <string name="important_task_optional">Important Task(optional)</string>
 
     <string name="group_tasks_that_move_your_goals_forward">Group tasks that move your goals forward</string>
     <string name="choose_a_category">Choose a category(optional)</string>
@@ -36,6 +38,6 @@
     <string name="add_task">Add Task</string>
 
     <string name="lets_kickstart_your_day">"Let’s kickstart your day!"</string>
-    <string name="nothing_here_yet_but_you_re_just_one_tap_away_from_progress">"Nothing here yet — but you’re just one tap away from progress."</string>
+    <string name="nothing_here_yet_but_you_re_just_one_tap_away_from_progress">Nothing here yet — but you’re just one tap away from progress.</string>
 
 </resources>

@@ -6,8 +6,14 @@ import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sorabh.node.nav.AllTaskNav
+import com.sorabh.node.nav.ImportantTaskNav
+import com.sorabh.node.nav.NavKey
+import com.sorabh.node.nav.RepeatTaskNav
+import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TopBarEvent
@@ -25,11 +31,11 @@ class AppViewModel : ViewModel() {
 
     val appBarState = mutableStateOf<AppBar?>(null)
 
-    val bottomBar = listOf(
-        Icons.Rounded.Today,
-        Icons.Rounded.Star,
-        Icons.AutoMirrored.Rounded.Article,
-        Icons.Rounded.Repeat
+    val bottomBar = mapOf<ImageVector, NavKey>(
+        Icons.Rounded.Today to TodayTaskNav,
+        Icons.Rounded.Star to ImportantTaskNav,
+        Icons.AutoMirrored.Rounded.Article to AllTaskNav,
+        Icons.Rounded.Repeat to RepeatTaskNav
     )
 
     fun sendEvent(event: TopBarEvent) {
@@ -40,7 +46,7 @@ class AppViewModel : ViewModel() {
         viewModelScope.launch { _snackBarEvent.emit(event) }
     }
 
-    fun onAppBarStateChanged(appBar: AppBar) {
+    fun onAppBarChanged(appBar: AppBar) {
         appBarState.value = appBar
     }
 }

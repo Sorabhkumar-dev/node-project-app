@@ -102,7 +102,7 @@ fun TaskCard(
                 .drawBehind {
                     val stripWidthPx = stripWidthDp.toPx()
                     drawRect(
-                        color = typeColor,
+                        color = typeColor.copy(0.5f),
                         topLeft = Offset.Zero,
                         size = Size(width = stripWidthPx, height = size.height)
                     )
