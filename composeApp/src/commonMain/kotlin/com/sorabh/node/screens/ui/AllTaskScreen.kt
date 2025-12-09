@@ -25,6 +25,7 @@ import com.sorabh.node.screens.viewmodels.AllTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.all_task
+import node.composeapp.generated.resources.all_tasks
 
 @Composable
 fun AllTaskScreen(
@@ -57,7 +58,7 @@ private fun AllTaskContent(viewModel: AllTaskViewModel, onNavigate: (NavKey) -> 
     val todayTasks = viewModel.allTasks.collectAsState(emptyList()).value
 
     if (todayTasks.isEmpty())
-        EmptyTaskState {
+        EmptyTaskState(image = Res.drawable.all_tasks) {
             onNavigate(AddTaskNav)
         }
     else

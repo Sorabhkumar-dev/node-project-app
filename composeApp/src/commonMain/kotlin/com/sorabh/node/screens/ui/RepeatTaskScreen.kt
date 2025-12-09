@@ -25,6 +25,7 @@ import com.sorabh.node.screens.viewmodels.RepeatTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.repeating_task
+import node.composeapp.generated.resources.repeating_tasks
 
 @Composable
 fun RepeatTaskScreen(
@@ -58,7 +59,7 @@ private fun RepeatTaskContent(viewModel: RepeatTaskViewModel, onNavigate: (NavKe
     val repeatingTasks = viewModel.repeatingTasks.collectAsState(emptyList()).value
 
     if (repeatingTasks.isEmpty())
-        EmptyTaskState {
+        EmptyTaskState(image = Res.drawable.repeating_tasks) {
             onNavigate(AddTaskNav)
         }
     else

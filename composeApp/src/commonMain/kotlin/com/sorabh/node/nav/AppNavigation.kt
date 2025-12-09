@@ -1,5 +1,9 @@
 package com.sorabh.node.nav
 
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -28,7 +32,43 @@ fun AppNavigation(
 
     NavDisplay(
         backStack = navBackStack,
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier.padding(paddingValues),
+        transitionSpec = {
+            ContentTransform(
+                targetContentEnter = slideInHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    initialOffsetX = { fullWidth -> fullWidth } // Slide in from right
+                ),
+                initialContentExit = slideOutHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    targetOffsetX = { fullWidth -> -fullWidth } // Slide out to left
+                )
+            )
+        },
+        popTransitionSpec = {
+            ContentTransform(
+                targetContentEnter = slideInHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    initialOffsetX = { fullWidth -> -fullWidth } // Slide in from left
+                ),
+                initialContentExit = slideOutHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    targetOffsetX = { fullWidth -> fullWidth } // Slide out to right
+                )
+            )
+        },
+        predictivePopTransitionSpec = {
+            ContentTransform(
+                targetContentEnter = slideInHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    initialOffsetX = { fullWidth -> -fullWidth } // Slide in from left
+                ),
+                initialContentExit = slideOutHorizontally(
+                    animationSpec = tween(durationMillis = 500),
+                    targetOffsetX = { fullWidth -> fullWidth } // Slide out to right
+                )
+            )
+        }
     ) { key ->
         when (key) {
             is TodayTaskNav -> NavEntry(key) {

@@ -24,6 +24,7 @@ import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.ImportantTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
+import node.composeapp.generated.resources.empty_task
 import node.composeapp.generated.resources.important_task
 
 @Composable
@@ -57,7 +58,7 @@ private fun ImportantTaskContent(viewModel: ImportantTaskViewModel, onNavigate: 
     val todayTasks = viewModel.importantTasks.collectAsState(emptyList()).value
 
     if (todayTasks.isEmpty())
-        EmptyTaskState {
+        EmptyTaskState(image = Res.drawable.empty_task) {
             onNavigate(AddTaskNav)
         }
     else
