@@ -9,5 +9,6 @@ enum class TaskType(val value:String) {
     QUICK("Quick"),
     PROJECTS("Projects"),
     GOALS("Goals"),
-    SHOPPING("shopping")
+    SHOPPING("shopping"),
+    Other("Other")
 }

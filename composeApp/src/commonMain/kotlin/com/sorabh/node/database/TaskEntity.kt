@@ -14,7 +14,7 @@ data class TaskEntity(
     val description: String = "",
     val dateTime: LocalDateTime,
     val isImportant: Boolean = false,
-    val taskType: TaskType = TaskType.WORK,
+    val taskType: TaskType = TaskType.Other,
     val isRepeatable: Boolean = false,
     val repeatType: RepeatType? = null,
     val taskStatus: TaskStatus = TaskStatus.PENDING
