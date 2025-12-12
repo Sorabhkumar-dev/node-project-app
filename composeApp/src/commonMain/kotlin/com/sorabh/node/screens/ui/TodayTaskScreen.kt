@@ -72,7 +72,7 @@ private fun TodayTaskContent(viewModel: TodayTaskViewModel, onNavigate: (NavKey)
                     onDelete = viewModel::deleteTask,
                     onComplete = viewModel::updateTask
                 ) { task ->
-                    TaskCard(task = task)
+                    TaskCard(task = task,onClick = onNavigate)
                 }
             }
         }

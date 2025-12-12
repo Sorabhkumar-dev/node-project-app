@@ -1,5 +1,10 @@
 package com.sorabh.node.utils
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.Pending
+import androidx.compose.material.icons.outlined.Replay
 import androidx.compose.ui.graphics.Color
 
 enum class TaskStatus {
@@ -26,3 +31,10 @@ val TaskStatus.containerColor: Color
         TaskStatus.DONE -> Color(0xFFE8F5E9)
         TaskStatus.CANCELLED -> Color(0xFFFFEBEE)
     }
+
+val TaskStatus.icon get() =  when (this) {
+    TaskStatus.PENDING -> Icons.Outlined.Pending
+    TaskStatus.PROGRESS -> Icons.Outlined.Replay
+    TaskStatus.DONE -> Icons.Filled.Done
+    TaskStatus.CANCELLED -> Icons.Filled.Cancel
+}

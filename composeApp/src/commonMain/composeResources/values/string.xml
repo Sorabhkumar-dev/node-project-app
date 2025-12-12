@@ -29,4 +29,6 @@
     <string name="lets_kickstart_your_day">"Let’s kickstart your day!"</string>
     <string name="nothing_here_yet_but_you_re_just_one_tap_away_from_progress">Nothing here yet — but you’re just one tap away from progress.</string>
 
+    <string name="task_detail">Task Detail</string>
+
 </resources>

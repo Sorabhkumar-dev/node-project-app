@@ -1,5 +1,7 @@
 package com.sorabh.node.utils
 
+import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
@@ -27,3 +29,21 @@ fun LocalDateTime.formatTaskDate() =
         char(':')
         minute()
     })
+
+fun LocalDateTime.formatTaskDate2() =
+    format(LocalDateTime.Format {
+        hour()
+        char(':')
+        minute()
+        char(' ')
+        amPmMarker("AM","PM")
+        char(' ')
+        day()
+        char(' ')
+        monthName(MonthNames.ENGLISH_ABBREVIATED)
+        char(' ')
+        year()
+    })
+
+val Color.main: Color get() = this.copy(0.7f)
+val Color.container: Color get() = this.copy(0.1f)

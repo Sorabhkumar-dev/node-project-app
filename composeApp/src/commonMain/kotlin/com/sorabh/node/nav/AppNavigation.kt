@@ -11,14 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.sorabh.node.AppViewModel
 import com.sorabh.node.screens.ui.AddTaskScreen
 import com.sorabh.node.screens.ui.AllTaskScreen
 import com.sorabh.node.screens.ui.ImportantTaskScreen
 import com.sorabh.node.screens.ui.RepeatTaskScreen
+import com.sorabh.node.screens.ui.TaskDetailScreen
 import com.sorabh.node.screens.ui.TodayTaskScreen
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavigation(
@@ -33,6 +36,10 @@ fun AppNavigation(
     NavDisplay(
         backStack = navBackStack,
         modifier = Modifier.padding(paddingValues),
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+
+        ),
         transitionSpec = {
             ContentTransform(
                 targetContentEnter = slideInHorizontally(
@@ -113,6 +120,13 @@ fun AppNavigation(
                     sharedViewModel = viewModel,
                     onAppBarChanged = viewModel::onAppBarChanged,
                     onNavigate = onNavigate
+                )
+            }
+
+            is TaskDetailNav -> NavEntry(key) {
+                TaskDetailScreen(
+                    viewModel = koinViewModel{ parametersOf(key) },
+                    sendTopBarEvent = viewModel::onAppBarChanged
                 )
             }
 

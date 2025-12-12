@@ -57,13 +57,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sorabh.node.database.TaskEntity
+import com.sorabh.node.nav.TaskDetailNav
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.TaskType
 import com.sorabh.node.utils.color
+import com.sorabh.node.utils.container
 import com.sorabh.node.utils.containerColor
 import com.sorabh.node.utils.currentLocalDateTime
 import com.sorabh.node.utils.formatTaskDate
+import com.sorabh.node.utils.main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -71,24 +74,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun TaskCard(
     task: TaskEntity,
-    onClick: () -> Unit = {}
+    onClick: (TaskDetailNav) -> Unit = {}
 ) {
-    // 1. Determine Color based on TaskType for visual coding
-    val typeColor = when (task.taskType) {
-        TaskType.WORK -> Color(0xFF007AFF)        // Strong Blue – focus, professionalism
-        TaskType.PERSONAL -> Color(0xFF8E8E93)    // Neutral Gray – personal / misc
-        TaskType.HEALTH -> Color(0xFFFF3B30)      // Red – health, alerts, body
-        TaskType.HOME -> Color(0xFF34C759)        // Fresh Green – home, nature, stability
-        TaskType.FINANCE -> Color(0xFFFFCC00)     // Gold/Yellow – money, savings
-        TaskType.QUICK -> Color(0xFFFF9500)       // Orange – quick actions, fast tasks
-        TaskType.PROJECTS -> Color(0xFF5856D6)    // Indigo – deep work, long-term focus
-        TaskType.GOALS -> Color(0xFFAF52DE)       // Purple – growth, vision, ambition
-        TaskType.SHOPPING -> Color(0xFFFF6B6B)    // Coral - Feels fun, impulsive, purchase-oriented
-    }
+
     val stripWidthDp = 6.dp
 
     ElevatedCard(
-        onClick = onClick,
+        onClick = { onClick(TaskDetailNav(task.id)) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -102,12 +94,12 @@ fun TaskCard(
                 .drawBehind {
                     val stripWidthPx = stripWidthDp.toPx()
                     drawRect(
-                        color = typeColor.copy(0.7f),
+                        color = task.taskType.color.main,
                         topLeft = Offset.Zero,
                         size = Size(width = stripWidthPx, height = size.height)
                     )
                 }
-                .background(typeColor.copy(0.045f), MaterialTheme.shapes.small)
+                .background(task.taskType.color.container, MaterialTheme.shapes.small)
                 .padding(16.dp)
         ) {
             // --- Header: Title & Importance ---
@@ -158,7 +150,7 @@ fun TaskCard(
             ) {
                 StatusBadge(
                     task.taskStatus.name,
-                    task.taskStatus.containerColor,
+                    task.taskStatus.color.container,
                     color = task.taskStatus.color
                 )
 
@@ -184,12 +176,12 @@ fun TaskCard(
 
                 // Task Type Chip (Minimal)
                 Surface(
-                    color = typeColor.copy(alpha = 0.1f),
+                    color = task.taskType.color.container,
                     shape = CircleShape
                 ) {
                     Text(
                         text = task.taskType.name.lowercase().capitalize(),
-                        color = typeColor,
+                        color = task.taskType.color,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -202,7 +194,7 @@ fun TaskCard(
 
 // --- Helper Components ---
 @Composable
-fun DetailIconText(icon: ImageVector, text: String) {
+fun  DetailIconText(icon: ImageVector, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             imageVector = icon,

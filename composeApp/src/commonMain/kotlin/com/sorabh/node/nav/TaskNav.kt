@@ -24,3 +24,6 @@ data object AddTaskNav : NavKey, BottomBarHider
 
 @Serializable
 data object ImportantTaskNav : NavKey, BottomBar
+
+@Serializable
+data class TaskDetailNav(val id: Int) : NavKey, BottomBarHider
