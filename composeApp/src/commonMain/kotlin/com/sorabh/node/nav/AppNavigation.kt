@@ -1,18 +1,15 @@
 package com.sorabh.node.nav
 
-import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.sorabh.node.AppViewModel
 import com.sorabh.node.screens.ui.AddTaskScreen
 import com.sorabh.node.screens.ui.AllTaskScreen
@@ -26,111 +23,95 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun AppNavigation(
     viewModel: AppViewModel,
-    navBackStack: NavBackStack<NavKey>,
+    navController: NavHostController,
     paddingValues: PaddingValues
 ) {
     val onNavigate: (NavKey) -> Unit = {
-        navBackStack.add(it)
+        navController.navigate(it)
     }
 
-    NavDisplay(
-        backStack = navBackStack,
+
+    NavHost(
+        navController = navController,
         modifier = Modifier.padding(paddingValues),
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
+        startDestination = TodayTaskNav,
 
-        ),
-        transitionSpec = {
-            ContentTransform(
-                targetContentEnter = slideInHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    initialOffsetX = { fullWidth -> fullWidth } // Slide in from right
-                ),
-                initialContentExit = slideOutHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    targetOffsetX = { fullWidth -> -fullWidth } // Slide out to left
-                )
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
             )
         },
-        popTransitionSpec = {
-            ContentTransform(
-                targetContentEnter = slideInHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    initialOffsetX = { fullWidth -> -fullWidth } // Slide in from left
-                ),
-                initialContentExit = slideOutHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    targetOffsetX = { fullWidth -> fullWidth } // Slide out to right
-                )
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(300)
             )
         },
-        predictivePopTransitionSpec = {
-            ContentTransform(
-                targetContentEnter = slideInHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    initialOffsetX = { fullWidth -> -fullWidth } // Slide in from left
-                ),
-                initialContentExit = slideOutHorizontally(
-                    animationSpec = tween(durationMillis = 500),
-                    targetOffsetX = { fullWidth -> fullWidth } // Slide out to right
-                )
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
             )
         }
-    ) { key ->
-        when (key) {
-            is TodayTaskNav -> NavEntry(key) {
-                TodayTaskScreen(
-                    sharedViewModel = viewModel,
-                    viewModel = koinViewModel(),
-                    onAppBarChanged = viewModel::onAppBarChanged,
-                    onNavigate = onNavigate
-                )
-            }
+    ) {
+        composable<TodayTaskNav> {
+            TodayTaskScreen(
+                sharedViewModel = viewModel,
+                viewModel = koinViewModel(),
+                onAppBarChanged = viewModel::onAppBarChanged,
+                onNavigate = onNavigate
+            )
+        }
 
-            is AllTaskNav -> NavEntry(key) {
-                AllTaskScreen(
-                    viewModel = koinViewModel(),
-                    sharedViewModel = viewModel,
-                    onAppBarChanged = viewModel::onAppBarChanged,
-                    onNavigate = onNavigate
-                )
-            }
+        composable<AllTaskNav> {
+            AllTaskScreen(
+                viewModel = koinViewModel(),
+                sharedViewModel = viewModel,
+                onAppBarChanged = viewModel::onAppBarChanged,
+                onNavigate = onNavigate
+            )
+        }
 
-            is RepeatTaskNav -> NavEntry(key) {
-                RepeatTaskScreen(
-                    viewModel = koinViewModel(),
-                    sharedViewModel = viewModel,
-                    onNavigate = onNavigate,
-                    onAppBarChanged = viewModel::onAppBarChanged
-                )
-            }
+        composable<RepeatTaskNav> {
+            RepeatTaskScreen(
+                viewModel = koinViewModel(),
+                sharedViewModel = viewModel,
+                onNavigate = onNavigate,
+                onAppBarChanged = viewModel::onAppBarChanged
+            )
+        }
 
-            is AddTaskNav -> NavEntry(key) {
-                AddTaskScreen(
-                    viewModel = koinViewModel(),
-                    sharedViewModel = viewModel,
-                    sendSnackBarEvent = viewModel::sendEvent,
-                    sendTopBarEvent = viewModel::onAppBarChanged
-                )
-            }
+        composable<AddTaskNav> {
+            AddTaskScreen(
+                viewModel = koinViewModel(),
+                sharedViewModel = viewModel,
+                sendSnackBarEvent = viewModel::sendEvent,
+                sendTopBarEvent = viewModel::onAppBarChanged
+            )
+        }
 
-            is ImportantTaskNav -> NavEntry(key) {
-                ImportantTaskScreen(
-                    viewModel = koinViewModel(),
-                    sharedViewModel = viewModel,
-                    onAppBarChanged = viewModel::onAppBarChanged,
-                    onNavigate = onNavigate
-                )
-            }
+        composable<ImportantTaskNav> {
+            ImportantTaskScreen(
+                viewModel = koinViewModel(),
+                sharedViewModel = viewModel,
+                onAppBarChanged = viewModel::onAppBarChanged,
+                onNavigate = onNavigate
+            )
+        }
 
-            is TaskDetailNav -> NavEntry(key) {
-                TaskDetailScreen(
-                    viewModel = koinViewModel{ parametersOf(key) },
-                    sendTopBarEvent = viewModel::onAppBarChanged
-                )
-            }
-
-            else -> throw Exception("Unknown route")
+        composable<TaskDetailNav> {
+            TaskDetailScreen(
+                viewModel = koinViewModel { parametersOf(it.toRoute<TaskDetailNav>()) },
+                sendTopBarEvent = viewModel::onAppBarChanged
+            )
         }
     }
+
 }

@@ -9,9 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation3.runtime.NavKey
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.ImportantTaskNav
+import com.sorabh.node.nav.NavKey
 import com.sorabh.node.nav.RepeatTaskNav
 import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.pojo.AppBar
@@ -31,11 +31,11 @@ class AppViewModel : ViewModel() {
 
     val appBarState = mutableStateOf<AppBar?>(null)
 
-    val bottomBar = mapOf<ImageVector, NavKey>(
-        Icons.Rounded.Today to TodayTaskNav,
-        Icons.Rounded.Star to ImportantTaskNav,
-        Icons.AutoMirrored.Rounded.Article to AllTaskNav,
-        Icons.Rounded.Repeat to RepeatTaskNav
+    val bottomBar = listOf(
+        TodayTaskNav,
+        ImportantTaskNav,
+        AllTaskNav,
+        RepeatTaskNav
     )
 
     fun sendEvent(event: TopBarEvent) {

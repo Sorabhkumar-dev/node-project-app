@@ -1,8 +1,9 @@
 package com.sorabh.node.nav
 
-import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+@Serializable
+sealed interface NavKey
 
 @Serializable
 sealed interface BottomBarHider

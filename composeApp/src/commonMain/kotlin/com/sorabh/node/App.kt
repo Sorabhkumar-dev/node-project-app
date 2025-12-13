@@ -1,7 +1,6 @@
 package com.sorabh.node
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -15,6 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Article
+import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,22 +40,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.savedstate.serialization.SavedStateConfiguration
-import com.sorabh.node.nav.AddTaskNav
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.AppNavigation
 import com.sorabh.node.nav.BottomBar
-import com.sorabh.node.nav.BottomBarHider
 import com.sorabh.node.nav.ImportantTaskNav
 import com.sorabh.node.nav.RepeatTaskNav
 import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.theme.BlackAndWhiteScheme
 import com.sorabh.node.utils.DismissSnackBarEvent
 import com.sorabh.node.utils.ShowSnackBarEvent
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 import org.jetbrains.compose.resources.stringResource
@@ -68,20 +68,7 @@ fun App() {
     val snackBarEvent = viewModel.snackBarEvent
     val snackBarIcon = remember { mutableStateOf<ImageVector?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
-    val navController = rememberNavBackStack(
-        configuration = SavedStateConfiguration {
-            serializersModule = SerializersModule {
-                polymorphic(NavKey::class) {
-                    subclass(AllTaskNav::class, AllTaskNav.serializer())
-                    subclass(TodayTaskNav::class, TodayTaskNav.serializer())
-                    subclass(RepeatTaskNav::class, RepeatTaskNav.serializer())
-                    subclass(AddTaskNav::class, AddTaskNav.serializer())
-                    subclass(ImportantTaskNav::class, ImportantTaskNav.serializer())
-                }
-            }
-        },
-        viewModel.bottomBar[Icons.Rounded.Today]!!
-    )
+    val navController = rememberNavController()
 
     LaunchedEffect(Unit) {
         snackBarEvent.collect {
@@ -143,30 +130,40 @@ fun App() {
                 )
             },
             bottomBar = {
-                AnimatedVisibility(navController.last() !is BottomBarHider) {
-                    NavigationBar {
-                        viewModel.bottomBar.forEach {
-                            NavigationBarItem(
-                                selected = it.value == navController.last(),
-                                icon = {
-                                    Icon(
-                                        imageVector = it.key,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(30.dp)
-                                    )
-                                },
-                                onClick = {
-                                    if (navController.last() is BottomBar)
-                                        if (!navController.contains(it.value))
-                                            navController.add(it.value)
-                                        else if (navController.last() != it.value) {
-                                            if (navController.remove(it.value))
-                                                navController.add(it.value)
-                                        }
-                                },
-                                colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.primary.copy(0.15f))
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
+                NavigationBar {
+                    viewModel.bottomBar.forEach {
+                        NavigationBarItem(
+                            selected = currentDestination?.hasRoute(it::class) == true,
+                            icon = {
+                                it as BottomBar
+                                Icon(
+                                    imageVector = when (it) {
+                                        AllTaskNav -> Icons.Rounded.Today
+                                        ImportantTaskNav -> Icons.Rounded.Star
+                                        RepeatTaskNav -> Icons.AutoMirrored.Rounded.Article
+                                        TodayTaskNav -> Icons.Rounded.Repeat
+                                    },
+                                    contentDescription = null,
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            },
+                            onClick = {
+                                navController.navigate(it) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                indicatorColor = MaterialTheme.colorScheme.primary.copy(
+                                    0.15f
+                                )
                             )
-                        }
+                        )
                     }
                 }
             },
@@ -200,7 +197,7 @@ fun App() {
                 }
             }
         ) {
-            AppNavigation(navBackStack = navController, viewModel = viewModel, paddingValues = it)
+            AppNavigation(navController = navController, viewModel = viewModel, paddingValues = it)
         }
     }
 }

@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.navigation3.runtime.NavKey
 import com.sorabh.node.AppViewModel
 import com.sorabh.node.components.EmptyTaskState
 import com.sorabh.node.components.SwipeableTaskCard
 import com.sorabh.node.components.TaskCard
 import com.sorabh.node.nav.AddTaskNav
+import com.sorabh.node.nav.NavKey
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AllTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
@@ -73,7 +73,7 @@ private fun AllTaskContent(viewModel: AllTaskViewModel, onNavigate: (NavKey) -> 
                     onDelete = viewModel::deleteTask,
                     onComplete = viewModel::updateTask
                 ) { task ->
-                    TaskCard(task = task)
+                    TaskCard(task = task, onClick = onNavigate)
                 }
             }
         }
