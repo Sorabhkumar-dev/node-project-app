@@ -1,17 +1,10 @@
 package com.sorabh.node
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Article
-import androidx.compose.material.icons.rounded.Repeat
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.Today
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.ImportantTaskNav
-import com.sorabh.node.nav.NavKey
 import com.sorabh.node.nav.RepeatTaskNav
 import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.pojo.AppBar

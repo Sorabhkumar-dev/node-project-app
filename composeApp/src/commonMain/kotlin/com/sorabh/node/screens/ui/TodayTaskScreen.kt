@@ -25,11 +25,11 @@ import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TodayTaskScreen(
     sharedViewModel: AppViewModel,
-    viewModel: TodayTaskViewModel,
     onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit,
 ) {
@@ -49,11 +49,12 @@ fun TodayTaskScreen(
             )
         )
     }
-    TodayTaskContent(viewModel = viewModel, onNavigate = onNavigate)
+    TodayTaskContent(onNavigate = onNavigate)
 }
 
 @Composable
-private fun TodayTaskContent(viewModel: TodayTaskViewModel, onNavigate: (NavKey) -> Unit) {
+private fun TodayTaskContent( onNavigate: (NavKey) -> Unit) {
+    val viewModel = koinViewModel<TodayTaskViewModel>()
     val todayTasks = viewModel.todayTasks.collectAsState(emptyList()).value
 
     if (todayTasks.isEmpty())

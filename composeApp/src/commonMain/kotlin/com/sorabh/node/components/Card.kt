@@ -22,8 +22,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.CardDefaults
@@ -69,6 +71,10 @@ import com.sorabh.node.utils.formatTaskDate
 import com.sorabh.node.utils.main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import node.composeapp.generated.resources.Res
+import node.composeapp.generated.resources.delete
+import node.composeapp.generated.resources.done
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -194,7 +200,7 @@ fun TaskCard(
 
 // --- Helper Components ---
 @Composable
-fun  DetailIconText(icon: ImageVector, text: String) {
+fun DetailIconText(icon: ImageVector, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             imageVector = icon,
@@ -297,13 +303,12 @@ fun SwipeableTaskCard(
         onDismiss = {
             coroutineScope.launch {
                 when (it) {
-                    SwipeToDismissBoxValue.StartToEnd -> onComplete(task.copy(taskStatus = TaskStatus.DONE))
-
-
-                    SwipeToDismissBoxValue.EndToStart -> {
+                    SwipeToDismissBoxValue.StartToEnd -> {
                         isRemoved = true
                         onDelete(task)
                     }
+
+                    SwipeToDismissBoxValue.EndToStart -> onComplete(task.copy(taskStatus = TaskStatus.DONE))
 
                     SwipeToDismissBoxValue.Settled -> {}
                 }
@@ -322,15 +327,15 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState) {
     val color by animateColorAsState(
         when (dismissState.targetValue) {
             SwipeToDismissBoxValue.Settled -> Color.Transparent
-            SwipeToDismissBoxValue.StartToEnd -> Color(0xFF66BB6A) // Green (Done)
-            SwipeToDismissBoxValue.EndToStart -> Color(0xFFEF5350) // Red (Delete)
+            SwipeToDismissBoxValue.EndToStart -> Color(0xFF66BB6A) // Green (Done)
+            SwipeToDismissBoxValue.StartToEnd -> Color(0xFFEF5350) // Red (Delete)
         },
         label = "SwipeColor"
     )
 
     val icon = when (dismissState.targetValue) {
-        SwipeToDismissBoxValue.StartToEnd -> Icons.Default.Check
-        SwipeToDismissBoxValue.EndToStart -> Icons.Outlined.Delete
+        SwipeToDismissBoxValue.StartToEnd -> Icons.Default.Delete
+        SwipeToDismissBoxValue.EndToStart -> Icons.Outlined.Check
         else -> Icons.Default.Cancel// Fallback
     }
 
@@ -366,14 +371,14 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState) {
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Done",
+                text = stringResource(Res.string.delete),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium
             )
         } else {
             Text(
-                text = "Delete",
+                text = stringResource(Res.string.done),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium

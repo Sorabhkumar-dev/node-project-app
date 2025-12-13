@@ -26,11 +26,11 @@ import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.repeating_task
 import node.composeapp.generated.resources.repeating_tasks
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun RepeatTaskScreen(
     sharedViewModel: AppViewModel,
-    viewModel: RepeatTaskViewModel,
     onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit,
 ) {
@@ -51,11 +51,12 @@ fun RepeatTaskScreen(
         )
     }
 
-    RepeatTaskContent(viewModel = viewModel, onNavigate = onNavigate)
+    RepeatTaskContent(onNavigate = onNavigate)
 }
 
 @Composable
-private fun RepeatTaskContent(viewModel: RepeatTaskViewModel, onNavigate: (NavKey) -> Unit) {
+private fun RepeatTaskContent(onNavigate: (NavKey) -> Unit) {
+    val viewModel = koinViewModel<RepeatTaskViewModel>()
     val repeatingTasks = viewModel.repeatingTasks.collectAsState(emptyList()).value
 
     if (repeatingTasks.isEmpty())

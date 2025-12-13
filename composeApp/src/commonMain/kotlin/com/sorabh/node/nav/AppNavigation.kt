@@ -64,7 +64,6 @@ fun AppNavigation(
         composable<TodayTaskNav> {
             TodayTaskScreen(
                 sharedViewModel = viewModel,
-                viewModel = koinViewModel(),
                 onAppBarChanged = viewModel::onAppBarChanged,
                 onNavigate = onNavigate
             )
@@ -72,7 +71,6 @@ fun AppNavigation(
 
         composable<AllTaskNav> {
             AllTaskScreen(
-                viewModel = koinViewModel(),
                 sharedViewModel = viewModel,
                 onAppBarChanged = viewModel::onAppBarChanged,
                 onNavigate = onNavigate
@@ -81,7 +79,6 @@ fun AppNavigation(
 
         composable<RepeatTaskNav> {
             RepeatTaskScreen(
-                viewModel = koinViewModel(),
                 sharedViewModel = viewModel,
                 onNavigate = onNavigate,
                 onAppBarChanged = viewModel::onAppBarChanged
@@ -99,7 +96,6 @@ fun AppNavigation(
 
         composable<ImportantTaskNav> {
             ImportantTaskScreen(
-                viewModel = koinViewModel(),
                 sharedViewModel = viewModel,
                 onAppBarChanged = viewModel::onAppBarChanged,
                 onNavigate = onNavigate

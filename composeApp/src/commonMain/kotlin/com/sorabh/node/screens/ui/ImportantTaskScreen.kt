@@ -26,10 +26,10 @@ import com.sorabh.node.utils.NavigateEvent
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.empty_task
 import node.composeapp.generated.resources.important_task
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ImportantTaskScreen(
-    viewModel: ImportantTaskViewModel,
     sharedViewModel: AppViewModel,
     onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit
@@ -49,12 +49,13 @@ fun ImportantTaskScreen(
             )
         )
     }
-    ImportantTaskContent(viewModel = viewModel, onNavigate = onNavigate)
+    ImportantTaskContent(onNavigate = onNavigate)
 
 }
 
 @Composable
-private fun ImportantTaskContent(viewModel: ImportantTaskViewModel, onNavigate: (NavKey) -> Unit) {
+private fun ImportantTaskContent(onNavigate: (NavKey) -> Unit) {
+    val viewModel = koinViewModel<ImportantTaskViewModel>()
     val todayTasks = viewModel.importantTasks.collectAsState(emptyList()).value
 
     if (todayTasks.isEmpty())
