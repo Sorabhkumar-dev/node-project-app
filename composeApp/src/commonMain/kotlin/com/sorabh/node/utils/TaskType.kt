@@ -1,13 +1,6 @@
 package com.sorabh.node.utils
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Work
-import androidx.compose.material.icons.outlined.Hevc
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Work
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.ic_finance
 import node.composeapp.generated.resources.ic_goals
@@ -65,10 +58,3 @@ val TaskType.icon: DrawableResource
         TaskType.SPORTS -> Res.drawable.ic_sports
         TaskType.Other -> Res.drawable.ic_others
     }
-
-// New extension properties
-val TaskType.colorMain: Color
-    get() = this.color.copy(alpha = 0.7f)
-
-val TaskType.colorContainer: Color
-    get() = this.color.copy(alpha = 0.1f)

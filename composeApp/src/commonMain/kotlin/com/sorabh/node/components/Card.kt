@@ -21,12 +21,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -65,7 +63,6 @@ import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.TaskType
 import com.sorabh.node.utils.color
 import com.sorabh.node.utils.container
-import com.sorabh.node.utils.containerColor
 import com.sorabh.node.utils.currentLocalDateTime
 import com.sorabh.node.utils.formatTaskDate
 import com.sorabh.node.utils.main

@@ -1,5 +1,9 @@
 package com.sorabh.node.screens.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +40,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TaskDetailViewModel
+import com.sorabh.node.utils.color
+import com.sorabh.node.utils.containerColor
 import com.sorabh.node.utils.formatTaskDate2
 import com.sorabh.node.utils.icon
 import com.sorabh.node.utils.main
@@ -49,6 +60,12 @@ fun TaskDetailScreen(viewModel: TaskDetailViewModel, sendTopBarEvent: (AppBar) -
 
 @Composable
 private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
+    var isVisible by remember { mutableStateOf(false) }
+
+    // 2. Trigger the animation when this Composable launches
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
     val taskDetail = viewModel.taskDetailFlow.collectAsState(initial = null).value
     Column(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -56,14 +73,31 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            Text(
-                text = "Faster Corp new project implementation and planing",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.SemiBold
-            )
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInHorizontally(
+                    // Start from -fullWidth (off-screen to the left)
+                    initialOffsetX = { fullWidth -> -fullWidth },
+                    animationSpec = tween(durationMillis = 1000)
+                )
+            ) {
+                Text(
+                    text = "Faster Corp new project implementation and planing",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(2.dp))
 
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(durationMillis = 2000)
+                )
+            ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Outlined.Schedule,
@@ -78,100 +112,133 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                     fontWeight = FontWeight.ExtraLight
                 )
             }
+                }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    "Description",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInHorizontally(
+                    // Start from -fullWidth (off-screen to the left)
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(durationMillis = 1000)
                 )
-
-                if (taskDetail?.isImportant == true)
-                    Icon(
-                        imageVector = Icons.Rounded.Star,
-                        null,
-                        modifier = Modifier.size(30.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        "Description",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
                     )
+
+                    if (taskDetail?.isImportant == true)
+                        Icon(
+                            imageVector = Icons.Rounded.Star,
+                            null,
+                            modifier = Modifier.size(30.dp)
+                        )
+                }
             }
             Spacer(modifier = Modifier.height(8.dp))
             HorizontalDivider()
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "Faster Corp new project implementation and planing.I have to plan and create proposal for creating new project regarding deep tech related advance AI/ML this project will be huge impact on Faster Corp tech capability and new stream.",
-                textAlign = TextAlign.Justify
-            )
-
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    // Start from -fullWidth (off-screen to the left)
+                    initialOffsetY = { fullHeight -> -fullHeight },
+                    animationSpec = tween(durationMillis = 1000)
+                )
+            ) {
+                Text(
+                    text = "Faster Corp new project implementation and planing.I have to plan and create proposal for creating new project regarding deep tech related advance AI/ML this project will be huge impact on Faster Corp tech capability and new stream.",
+                    textAlign = TextAlign.Justify
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            AnimatedVisibility(
+                visible = isVisible,
+                enter = slideInVertically(
+                    initialOffsetY = { fullHeight -> fullHeight },
+                    animationSpec = tween(durationMillis = 2000)
+                )
             ) {
-                taskDetail?.taskStatus?.let {
-                    ElevatedFilterChip(
-                        onClick = {},
-                        colors = FilterChipDefaults.elevatedFilterChipColors(
-                            labelColor = MaterialTheme.colorScheme.primary.main,
-                            iconColor = MaterialTheme.colorScheme.primary.main
-                        ),
-                        label = {
-                            Text(text = it.name)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = it.icon,
-                                contentDescription = null
-                            )
-                        },
-                        selected = false
-                    )
-                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    taskDetail?.taskStatus?.let {
+                        ElevatedFilterChip(
+                            onClick = {},
+                            shape = MaterialTheme.shapes.medium,
+                            colors = FilterChipDefaults.elevatedFilterChipColors(
+                                containerColor = taskDetail.taskStatus.containerColor,
+                                labelColor = taskDetail.taskStatus.color,
+                                iconColor = taskDetail.taskStatus.color
+                            ),
+                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
+                            label = {
+                                Text(text = it.name)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = it.icon,
+                                    contentDescription = null
+                                )
+                            },
+                            selected = false
+                        )
+                    }
 
-                taskDetail?.taskType?.let {
-                    ElevatedFilterChip(
-                        onClick = {},
-                        colors = FilterChipDefaults.elevatedFilterChipColors(
-                            labelColor = MaterialTheme.colorScheme.primary.main,
-                            iconColor = MaterialTheme.colorScheme.primary.main
-                        ),
-                        label = { Text(text = it.name) },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(it.icon),
-                                contentDescription = null
-                            )
-                        },
-                        selected = false
-                    )
-                }
+                    taskDetail?.taskType?.let {
+                        ElevatedFilterChip(
+                            onClick = {},
+                            shape = MaterialTheme.shapes.medium,
+                            colors = FilterChipDefaults.elevatedFilterChipColors(
+                                labelColor = it.color,
+                                iconColor = it.color
+                            ),
+                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
+                            label = { Text(text = it.name) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(it.icon),
+                                    contentDescription = null
+                                )
+                            },
+                            selected = false
+                        )
+                    }
 
-                if (taskDetail?.isRepeatable == true)
-                    ElevatedFilterChip(
-                        onClick = {},
-                        colors = FilterChipDefaults.elevatedFilterChipColors(
-                            labelColor = MaterialTheme.colorScheme.primary.main,
-                            iconColor = MaterialTheme.colorScheme.primary.main
-                        ),
-                        label = {
-                            Text(
-                                text = taskDetail.repeatType?.value ?: "",
-                            )
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Repeat,
-                                contentDescription = null
-                            )
-                        },
-                        selected = false
-                    )
+                    if (taskDetail?.isRepeatable == true)
+                        ElevatedFilterChip(
+                            onClick = {},
+                            shape = MaterialTheme.shapes.medium,
+                            colors = FilterChipDefaults.elevatedFilterChipColors(
+                                labelColor = MaterialTheme.colorScheme.primary.main,
+                                iconColor = MaterialTheme.colorScheme.primary.main
+                            ),
+                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
+                            label = {
+                                Text(
+                                    text = taskDetail.repeatType?.value ?: "",
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Repeat,
+                                    contentDescription = null
+                                )
+                            },
+                            selected = false
+                        )
+                }
             }
         }
     }
