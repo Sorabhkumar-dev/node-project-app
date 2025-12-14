@@ -5,10 +5,11 @@ import com.sorabh.node.di.appModule
 import com.sorabh.node.di.databaseModule
 import com.sorabh.node.di.platformDatabaseModule
 import org.koin.core.context.startKoin
+import platform.UIKit.UIViewController
 
-fun MainViewController() = ComposeUIViewController {
+fun MainViewController(): UIViewController {
     startKoin {
         modules(appModule, databaseModule, platformDatabaseModule)
     }
-    App()
+    return ComposeUIViewController { App() }
 }

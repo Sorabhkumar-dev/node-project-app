@@ -1,7 +1,6 @@
 package com.sorabh.node.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -26,7 +25,7 @@ interface TaskDao {
     suspend fun deleteTask(taskId: Long,updatedAt: LocalDateTime = currentLocalDateTime())
 
     @Query("SELECT EXISTS(SELECT * FROM TaskEntity WHERE title = :title AND markAsDelete = 0)")
-    fun isTitleExists(title: String): Boolean
+    suspend fun isTitleExists(title: String): Boolean
 
     @Query("SELECT * FROM TaskEntity WHERE isRepeatable = 1 AND markAsDelete = 0")
     fun getRepeatingTasks(): Flow<List<TaskEntity>>
