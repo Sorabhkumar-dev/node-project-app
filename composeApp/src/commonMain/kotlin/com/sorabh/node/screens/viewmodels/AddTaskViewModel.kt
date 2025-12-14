@@ -125,6 +125,7 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
     fun saveTask(sendSnackBarEvent: (SnackBarEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskEntity(
+                email = "sorabhkumar@gmail.com",
                 title = taskTitle.value.text,
                 description = taskDescription.value.text,
                 dateTime = LocalDateTime(taskDate.value, taskTime.value),
@@ -132,7 +133,8 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
                 taskType = selectedTaskCategory.value,
                 isRepeatable = isTaskRepeatable.value,
                 repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,
-                createdAt = currentLocalDateTime()
+                createdAt = currentLocalDateTime(),
+                updatedAt = currentLocalDateTime()
             )
             if (taskRepository.isTitleExists(task.title))
                 sendSnackBarEvent(ShowSnackBarEvent("Task Already Exists", Icons.Default.Close))

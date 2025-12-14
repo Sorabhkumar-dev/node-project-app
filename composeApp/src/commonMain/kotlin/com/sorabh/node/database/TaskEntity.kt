@@ -11,16 +11,17 @@ import kotlinx.datetime.LocalDateTime
 @Entity
 data class TaskEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val email: String,
     val title: String,
     val description: String = "",
-    val dateTime: LocalDateTime,
     val isImportant: Boolean = false,
-    val taskType: TaskType = TaskType.Other,
     val isRepeatable: Boolean = false,
-    val repeatType: RepeatType? = null,
-    val taskStatus: TaskStatus = TaskStatus.PENDING,
     val isSynced: Boolean = false,
     val markAsDelete: Boolean = false,
+    val repeatType: RepeatType? = null,
+    val taskStatus: TaskStatus = TaskStatus.TODO,
+    val taskType: TaskType = TaskType.OTHER,
+    val dateTime: LocalDateTime,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime = currentLocalDateTime()
 )

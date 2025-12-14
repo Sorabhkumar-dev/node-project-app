@@ -246,12 +246,14 @@ fun TaskCardPreview() {
         Column(modifier = Modifier.padding(16.dp)) {
             TaskCard(
                 task = TaskEntity(
+                    email = "sorabhkumar@gmail.com",
                     title = "Finish Project Documentation",
                     description = "Write the technical specs and api references for the client.",
                     dateTime = currentLocalDateTime(),
                     isImportant = true,
                     taskType = TaskType.WORK,
-                    createdAt = currentLocalDateTime()
+                    createdAt = currentLocalDateTime(),
+                    updatedAt = currentLocalDateTime()
                 )
             )
 
@@ -259,12 +261,14 @@ fun TaskCardPreview() {
 
             TaskCard(
                 task = TaskEntity(
+                    email = "sorabhkumar@gmail.com",
                     title = "Buy Groceries",
                     dateTime = currentLocalDateTime(),
                     taskType = TaskType.PERSONAL,
                     isRepeatable = true,
                     repeatType = RepeatType.WEEKLY,
-                    createdAt = currentLocalDateTime()
+                    createdAt = currentLocalDateTime(),
+                    updatedAt = currentLocalDateTime()
                 )
             )
         }

@@ -26,7 +26,7 @@ enum class TaskType(val value: String) {
     GOALS("Goals"),
     SHOPPING("Shopping"),
     SPORTS("Sports"),
-    Other("Other")
+    OTHER("Other")
 }
 
 val TaskType.color: Color
@@ -40,7 +40,7 @@ val TaskType.color: Color
         TaskType.PROJECTS -> Color(0xFF5856D6)    // Indigo – deep work, long-term focus
         TaskType.GOALS -> Color(0xFFAF52DE)       // Purple – growth, vision, ambition
         TaskType.SHOPPING -> Color(0xFFFF6B6B)    // Coral - Feels fun, impulsive, purchase-oriented
-        TaskType.Other -> Color(0xFF000000)        // Black – misc
+        TaskType.OTHER -> Color(0xFF000000)        // Black – misc
         TaskType.SPORTS -> Color(0xFF4A90E2)
     }
 
@@ -56,5 +56,5 @@ val TaskType.icon: DrawableResource
         TaskType.GOALS -> Res.drawable.ic_goals
         TaskType.SHOPPING -> Res.drawable.ic_shopping
         TaskType.SPORTS -> Res.drawable.ic_sports
-        TaskType.Other -> Res.drawable.ic_others
+        TaskType.OTHER -> Res.drawable.ic_others
     }
