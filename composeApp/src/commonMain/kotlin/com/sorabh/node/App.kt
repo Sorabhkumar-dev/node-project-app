@@ -7,6 +7,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,9 +51,11 @@ import com.sorabh.node.nav.BottomBar
 import com.sorabh.node.nav.ImportantTaskNav
 import com.sorabh.node.nav.RepeatTaskNav
 import com.sorabh.node.nav.TodayTaskNav
+import com.sorabh.node.theme.BlackAndWhiteDarkScheme
 import com.sorabh.node.theme.BlackAndWhiteScheme
 import com.sorabh.node.utils.DismissSnackBarEvent
 import com.sorabh.node.utils.ShowSnackBarEvent
+import com.sorabh.node.utils.getAppTypography
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 import org.jetbrains.compose.resources.stringResource
@@ -82,7 +85,7 @@ fun App() {
         }
     }
 
-    MaterialTheme(colorScheme = BlackAndWhiteScheme) {
+    MaterialTheme(colorScheme = if (isSystemInDarkTheme()) BlackAndWhiteDarkScheme else BlackAndWhiteScheme) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {

@@ -1,5 +1,6 @@
 package com.sorabh.node.theme
 
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
@@ -32,4 +33,30 @@ val AbsoluteBlack = Color(0xFF000000)
     // Error states (keeping it monochrome)
     error = AbsoluteBlack,
     onError = AbsoluteWhite
+)
+
+
+val BlackAndWhiteDarkScheme = darkColorScheme(
+
+    // Main brand color (inverse for dark mode)
+    primary = AbsoluteWhite,
+    onPrimary = AbsoluteBlack,
+    primaryContainer = Color(0xFF2C2C2E),
+
+    // Secondary accents
+    secondary = AbsoluteWhite,
+    onSecondary = AbsoluteBlack,
+
+    // Backgrounds
+    background = Color(0xFF0E0E10),      // Near-black (not pure)
+    onBackground = AbsoluteWhite,
+
+    // Surface (Cards, Sheets, Menus)
+    surface = Color(0xFF161618),
+    onSurface = AbsoluteWhite,
+    surfaceContainer = Color(0xFF2C2C2E),
+
+    // Error states (monochrome)
+    error = AbsoluteWhite,
+    onError = AbsoluteBlack
 )

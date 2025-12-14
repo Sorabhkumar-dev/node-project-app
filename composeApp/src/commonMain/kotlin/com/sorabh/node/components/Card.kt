@@ -250,7 +250,8 @@ fun TaskCardPreview() {
                     description = "Write the technical specs and api references for the client.",
                     dateTime = currentLocalDateTime(),
                     isImportant = true,
-                    taskType = TaskType.WORK
+                    taskType = TaskType.WORK,
+                    createdAt = currentLocalDateTime()
                 )
             )
 
@@ -262,7 +263,8 @@ fun TaskCardPreview() {
                     dateTime = currentLocalDateTime(),
                     taskType = TaskType.PERSONAL,
                     isRepeatable = true,
-                    repeatType = RepeatType.WEEKLY
+                    repeatType = RepeatType.WEEKLY,
+                    createdAt = currentLocalDateTime()
                 )
             )
         }
@@ -273,7 +275,7 @@ fun TaskCardPreview() {
 @Composable
 fun SwipeableTaskCard(
     task: TaskEntity,
-    onDelete: (TaskEntity) -> Unit,
+    onDelete: (Long) -> Unit,
     onComplete: (TaskEntity) -> Unit,
     content: @Composable (TaskEntity) -> Unit // Pass your existing TaskCard here
 ) {
@@ -302,7 +304,7 @@ fun SwipeableTaskCard(
                 when (it) {
                     SwipeToDismissBoxValue.StartToEnd -> {
                         isRemoved = true
-                        onDelete(task)
+                        onDelete(task.id)
                     }
 
                     SwipeToDismissBoxValue.EndToStart -> onComplete(task.copy(taskStatus = TaskStatus.DONE))

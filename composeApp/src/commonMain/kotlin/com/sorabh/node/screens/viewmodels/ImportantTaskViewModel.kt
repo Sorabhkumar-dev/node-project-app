@@ -16,9 +16,9 @@ class ImportantTaskViewModel(private val repository: TaskRepository) : ViewModel
         }
     }
 
-    fun deleteTask(task: TaskEntity) {
+    fun deleteTask(taskId: Long) {
         viewModelScope.launch {
-            repository.deleteTask(task)
+            repository.deleteTask(taskId)
         }
     }
 }

@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -98,21 +100,21 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                     animationSpec = tween(durationMillis = 2000)
                 )
             ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Outlined.Schedule,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = taskDetail?.dateTime?.formatTaskDate2() ?: "",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.ExtraLight
-                )
-            }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.Schedule,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = taskDetail?.dateTime?.formatTaskDate2() ?: "",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.ExtraLight
+                    )
                 }
+            }
             Spacer(modifier = Modifier.height(8.dp))
 
             AnimatedVisibility(
@@ -159,6 +161,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                     text = "Faster Corp new project implementation and planing.I have to plan and create proposal for creating new project regarding deep tech related advance AI/ML this project will be huge impact on Faster Corp tech capability and new stream.",
                     textAlign = TextAlign.Justify
                 )
+
             }
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -178,7 +181,6 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                             onClick = {},
                             shape = MaterialTheme.shapes.medium,
                             colors = FilterChipDefaults.elevatedFilterChipColors(
-                                containerColor = taskDetail.taskStatus.containerColor,
                                 labelColor = taskDetail.taskStatus.color,
                                 iconColor = taskDetail.taskStatus.color
                             ),

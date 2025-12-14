@@ -13,6 +13,7 @@ import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskType
+import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -130,13 +131,19 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
                 isImportant = isTaskPriority.value,
                 taskType = selectedTaskCategory.value,
                 isRepeatable = isTaskRepeatable.value,
-                repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null
+                repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,
+                createdAt = currentLocalDateTime()
             )
             if (taskRepository.isTitleExists(task.title))
                 sendSnackBarEvent(ShowSnackBarEvent("Task Already Exists", Icons.Default.Close))
             else {
                 taskRepository.insertTask(task)
-                sendSnackBarEvent(ShowSnackBarEvent("Task \"${task.title}\" Added",Icons.Default.Done))
+                sendSnackBarEvent(
+                    ShowSnackBarEvent(
+                        "Task \"${task.title}\" Added",
+                        Icons.Default.Done
+                    )
+                )
             }
         }
     }

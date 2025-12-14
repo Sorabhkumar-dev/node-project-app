@@ -6,20 +6,20 @@ import kotlinx.datetime.LocalDateTime
 interface TaskRepository {
     suspend fun insertTask(task: TaskEntity)
     suspend fun updateTask(task: TaskEntity)
-    suspend fun deleteTask(task: TaskEntity)
+    suspend fun deleteTask(taskId: Long)
     fun isTitleExists(title: String): Boolean
     fun getRepeatingTasks(): Flow<List<TaskEntity>>
     fun getAllTask(): Flow<List<TaskEntity>>
     fun getImportantTasks(): Flow<List<TaskEntity>>
     fun getTodayTasks(start: LocalDateTime, end: LocalDateTime): Flow<List<TaskEntity>>
-    fun getTask(id: Int): Flow<TaskEntity>
+    fun getTask(id: Long): Flow<TaskEntity>
     fun getAllTasks(): Flow<List<TaskEntity>>
 }
 
 class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
     override suspend fun insertTask(task: TaskEntity) = taskDao.insertTask(task)
     override suspend fun updateTask(task: TaskEntity) = taskDao.updateTask(task)
-    override suspend fun deleteTask(task: TaskEntity) = taskDao.deleteTask(task)
+    override suspend fun deleteTask(taskId: Long) = taskDao.deleteTask(taskId)
     override fun isTitleExists(title: String): Boolean = taskDao.isTitleExists(title)
     override fun getRepeatingTasks(): Flow<List<TaskEntity>> = taskDao.getRepeatingTasks()
     override fun getAllTask(): Flow<List<TaskEntity>> = taskDao.getAllTask()
@@ -27,6 +27,6 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
     override fun getTodayTasks(start: LocalDateTime, end: LocalDateTime): Flow<List<TaskEntity>> =
         taskDao.getTodayTasks(start, end)
 
-    override fun getTask(id: Int): Flow<TaskEntity> = taskDao.getTask(id)
+    override fun getTask(id: Long): Flow<TaskEntity> = taskDao.getTask(id)
     override fun getAllTasks(): Flow<List<TaskEntity>> = taskDao.getAllTasks()
 }
