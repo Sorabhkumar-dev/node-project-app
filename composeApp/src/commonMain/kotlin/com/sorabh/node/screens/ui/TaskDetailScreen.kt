@@ -18,8 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -43,7 +41,6 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TaskDetailViewModel
 import com.sorabh.node.utils.color
-import com.sorabh.node.utils.containerColor
 import com.sorabh.node.utils.formatTaskDate2
 import com.sorabh.node.utils.icon
 import com.sorabh.node.utils.main
