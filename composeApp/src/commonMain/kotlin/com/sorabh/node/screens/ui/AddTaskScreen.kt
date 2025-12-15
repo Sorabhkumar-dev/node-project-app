@@ -44,6 +44,7 @@ import com.sorabh.node.utils.AddTaskEvent
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
+import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskType
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.add_a_task
@@ -51,11 +52,11 @@ import node.composeapp.generated.resources.add_more_info
 import node.composeapp.generated.resources.add_new_task
 import node.composeapp.generated.resources.add_task
 import node.composeapp.generated.resources.description
-import node.composeapp.generated.resources.mark_as_important
 import node.composeapp.generated.resources.repeat
 import node.composeapp.generated.resources.repeating_task
 import node.composeapp.generated.resources.select_category
 import node.composeapp.generated.resources.select_date
+import node.composeapp.generated.resources.select_priority
 import node.composeapp.generated.resources.select_time
 import node.composeapp.generated.resources.task_description
 import node.composeapp.generated.resources.title
@@ -235,21 +236,18 @@ private fun AddTaskContent(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(Res.string.mark_as_important),
-                        fontWeight = FontWeight.SemiBold
-                    )
+                Text(
+                    text = stringResource(resource = Res.string.select_priority),
+                    fontWeight = FontWeight.SemiBold
+                )
 
-                    Switch(
-                        checked = viewModel.isTaskPriority.value,
-                        onCheckedChange = viewModel::onTaskPriorityChanged
-                    )
-                }
+
+                OutlinedDropdown(
+                    items = TaskPriority.entries.toList(),
+                    itemLabel = { it.name },
+                    selectedItem = viewModel.selectTaskPriority.value,
+                    onItemSelected = viewModel::onTaskPrioritySelected
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 

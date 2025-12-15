@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -38,9 +37,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import com.sorabh.node.components.StatusBadge
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TaskDetailViewModel
 import com.sorabh.node.utils.color
+import com.sorabh.node.utils.container
 import com.sorabh.node.utils.formatTaskDate2
 import com.sorabh.node.utils.icon
 import com.sorabh.node.utils.main
@@ -133,12 +134,14 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                         fontWeight = FontWeight.SemiBold
                     )
 
-                    if (taskDetail?.isImportant == true)
-                        Icon(
-                            imageVector = Icons.Rounded.Star,
-                            null,
-                            modifier = Modifier.size(30.dp)
-                        )
+                    StatusBadge(
+                        text = taskDetail?.priority?.name ?: "",
+                        textStyle = MaterialTheme.typography.labelLarge,
+                        taskDetail?.priority?.color?.container
+                            ?: MaterialTheme.colorScheme.background,
+                        color = taskDetail?.priority?.color
+                            ?: MaterialTheme.colorScheme.onBackground
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))

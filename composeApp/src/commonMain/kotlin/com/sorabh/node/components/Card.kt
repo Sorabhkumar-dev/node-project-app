@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.CardDefaults
@@ -52,7 +51,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration.Companion.LineThrough
+import androidx.compose.ui.text.style.TextDecoration.Companion.None
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -105,30 +107,15 @@ fun TaskCard(
                 .background(task.taskType.color.container, MaterialTheme.shapes.small)
                 .padding(16.dp)
         ) {
-            // --- Header: Title & Importance ---
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = task.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
 
-                if (task.isImportant)
-                    Icon(
-                        imageVector = Icons.Filled.Star,
-                        contentDescription = "Important",
-                        tint = Color(0xFFFFC107), // Amber for star
-                        modifier = Modifier.size(20.dp)
-                    )
-
-            }
+            Text(
+                text = task.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textDecoration = if (task.dateTime.date < currentLocalDateTime().date) LineThrough else None
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -152,9 +139,17 @@ fun TaskCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StatusBadge(
-                    task.taskStatus.name,
-                    task.taskStatus.color.container,
+                    text=task.taskStatus.name,
+                    containerColor = task.taskStatus.color.container,
                     color = task.taskStatus.color
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                StatusBadge(
+                    text = task.priority.name,
+                    containerColor = task.priority.color.container,
+                    color = task.priority.color
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -216,7 +211,12 @@ fun DetailIconText(icon: ImageVector, text: String) {
 
 // --- Helper Composable for the Status Badge ---
 @Composable
-fun StatusBadge(text: String, containerColor: Color, color: Color) {
+fun StatusBadge(
+    text: String,
+    textStyle: TextStyle = MaterialTheme.typography.labelSmall,
+    containerColor: Color,
+    color: Color
+) {
     Surface(
         color = containerColor,
         shape = RoundedCornerShape(4.dp)
@@ -224,7 +224,7 @@ fun StatusBadge(text: String, containerColor: Color, color: Color) {
         Text(
             text = text,
             color = color,
-            style = MaterialTheme.typography.labelSmall,
+            style = textStyle,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             fontSize = 10.sp // Make it very small/minimal
@@ -250,7 +250,6 @@ fun TaskCardPreview() {
                     title = "Finish Project Documentation",
                     description = "Write the technical specs and api references for the client.",
                     dateTime = currentLocalDateTime(),
-                    isImportant = true,
                     taskType = TaskType.WORK,
                     createdAt = currentLocalDateTime(),
                     updatedAt = currentLocalDateTime()

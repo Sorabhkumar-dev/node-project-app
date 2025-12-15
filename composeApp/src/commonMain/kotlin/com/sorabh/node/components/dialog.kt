@@ -47,7 +47,7 @@ fun ShowDatePicker(
     isRefreshCalender: Boolean = false,
     onDismiss: () -> Unit,
     date: Long? = null,
-    isGiveSelectableDate: Boolean = true,
+    isGiveSelectableDate: Boolean = false,
     onDateSelected: (Long?) -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
@@ -57,7 +57,8 @@ fun ShowDatePicker(
                 return if (isGiveSelectableDate) utcTimeMillis >= (date
                     ?: Clock.System.now().toEpochMilliseconds()) else true
             }
-        })
+        }
+    )
 
     LaunchedEffect(isRefreshCalender) {
         if (isRefreshCalender)

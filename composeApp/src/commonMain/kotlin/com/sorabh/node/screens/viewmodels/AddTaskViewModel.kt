@@ -12,6 +12,7 @@ import com.sorabh.node.database.TaskRepository
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
+import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskType
 import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.Dispatchers
@@ -63,11 +64,10 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
     val taskDate = mutableStateOf(currentDate)
     val taskTime = mutableStateOf(currentTime)
 
-    val isTaskPriority = mutableStateOf(false)
-
     val isShowDatePicker = mutableStateOf(false)
     val isShowTimePicker = mutableStateOf(false)
 
+    val selectTaskPriority = mutableStateOf(TaskPriority.MEDIUM)
     val selectedTaskCategory = mutableStateOf(TaskType.WORK)
 
     val isTaskRepeatable = mutableStateOf(false)
@@ -106,8 +106,8 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
         isShowTimePicker.value = isShow
     }
 
-    fun onTaskPriorityChanged(isPriority: Boolean) {
-        isTaskPriority.value = isPriority
+    fun onTaskPrioritySelected(priority: TaskPriority) {
+        selectTaskPriority.value = priority
     }
 
     fun onTaskCategorySelected(taskType: TaskType) {
@@ -129,7 +129,7 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
                 title = taskTitle.value.text,
                 description = taskDescription.value.text,
                 dateTime = LocalDateTime(taskDate.value, taskTime.value),
-                isImportant = isTaskPriority.value,
+                priority = selectTaskPriority.value,
                 taskType = selectedTaskCategory.value,
                 isRepeatable = isTaskRepeatable.value,
                 repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,

@@ -8,9 +8,10 @@ import androidx.room.TypeConverters
 import com.sorabh.node.database.TaskDao
 import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.database.type_converters.LocalDateTimeConverters
+import com.sorabh.node.database.type_converters.PriorityConverter
 
 @Database(entities = [TaskEntity::class], version = 2)
-@TypeConverters(LocalDateTimeConverters::class)
+@TypeConverters(LocalDateTimeConverters::class, PriorityConverter::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getDao(): TaskDao
