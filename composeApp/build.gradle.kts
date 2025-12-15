@@ -46,7 +46,9 @@ kotlin {
 
             implementation(libs.materila.icon.extend)
             implementation(libs.kotlinx.datetime)
+//            implementation(libs.kotlinx.atomicfu)
 
+            implementation(libs.datastore.preference.core)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
 

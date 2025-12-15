@@ -3,6 +3,7 @@ package com.sorabh.node
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sorabh.node.datastore.NodePreference
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.ImportantTaskNav
 import com.sorabh.node.nav.RepeatTaskNav
@@ -14,7 +15,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class AppViewModel : ViewModel() {
+class AppViewModel(private val preference: NodePreference) : ViewModel() {
+
+    val appBarState = mutableStateOf<AppBar?>(null)
 
     private val _topBarEvent = MutableSharedFlow<TopBarEvent>()
     val topBarEvent = _topBarEvent.asSharedFlow()
@@ -22,7 +25,7 @@ class AppViewModel : ViewModel() {
     private val _snackBarEvent = MutableSharedFlow<SnackBarEvent>()
     val snackBarEvent = _snackBarEvent.asSharedFlow()
 
-    val appBarState = mutableStateOf<AppBar?>(null)
+    val readTheme = preference.readTheme
 
     val bottomBar = listOf(
         TodayTaskNav,
@@ -30,6 +33,10 @@ class AppViewModel : ViewModel() {
         AllTaskNav,
         RepeatTaskNav
     )
+
+    fun onAppBarChanged(appBar: AppBar) {
+        appBarState.value = appBar
+    }
 
     fun sendEvent(event: TopBarEvent) {
         viewModelScope.launch { _topBarEvent.emit(event) }
@@ -39,7 +46,9 @@ class AppViewModel : ViewModel() {
         viewModelScope.launch { _snackBarEvent.emit(event) }
     }
 
-    fun onAppBarChanged(appBar: AppBar) {
-        appBarState.value = appBar
+    fun writeTheme(isLight: Boolean) {
+        viewModelScope.launch {
+            preference.writeTheme(isLight)
+        }
     }
 }

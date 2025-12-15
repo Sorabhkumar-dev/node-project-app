@@ -3,13 +3,17 @@ package com.sorabh.node
 import androidx.compose.ui.window.ComposeUIViewController
 import com.sorabh.node.di.appModule
 import com.sorabh.node.di.databaseModule
+import com.sorabh.node.di.platformDataStoreModule
 import com.sorabh.node.di.platformDatabaseModule
+import com.sorabh.node.di.sharedModule
 import org.koin.core.context.startKoin
 import platform.UIKit.UIViewController
 
 fun MainViewController(): UIViewController {
     startKoin {
-        modules(appModule, databaseModule, platformDatabaseModule)
+        modules(appModule, databaseModule, platformDatabaseModule, sharedModule,
+            platformDataStoreModule
+        )
     }
     return ComposeUIViewController { App() }
 }

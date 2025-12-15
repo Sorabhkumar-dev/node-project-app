@@ -11,7 +11,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel { AppViewModel() }
+    viewModel { AppViewModel(get()) }
     viewModel { TodayTaskViewModel(get()) }
     viewModel { AddTaskViewModel(get()) }
     viewModel { ImportantTaskViewModel(get()) }

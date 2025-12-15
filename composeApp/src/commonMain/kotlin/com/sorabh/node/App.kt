@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Article
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
@@ -32,11 +34,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -70,6 +74,7 @@ fun App() {
     val snackBarIcon = remember { mutableStateOf<ImageVector?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
+    val themeIcon = viewModel.readTheme.collectAsState(false).value
 
     LaunchedEffect(Unit) {
         snackBarEvent.collect {
@@ -83,26 +88,38 @@ fun App() {
         }
     }
 
-    MaterialTheme(colorScheme = if (false) BlackAndWhiteDarkScheme else BlackAndWhiteScheme) {
+    MaterialTheme(colorScheme = if (themeIcon) BlackAndWhiteScheme else BlackAndWhiteDarkScheme) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
                     title = {
-                        AnimatedContent(
-                            targetState = stringResource(
-                                appBarState?.title
-                                    ?: Res.string.today_task
-                            ),
-                            transitionSpec = {
-                                slideInVertically { it } + fadeIn() togetherWith
-                                        slideOutVertically { -it } + fadeOut()
-                            },
-                            label = ""
-                        ) { target ->
-                            Text(text = target)
-                        }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AnimatedContent(
+                                targetState = stringResource(
+                                    appBarState?.title
+                                        ?: Res.string.today_task
+                                ),
+                                transitionSpec = {
+                                    slideInVertically { it } + fadeIn() togetherWith
+                                            slideOutVertically { -it } + fadeOut()
+                                },
+                                label = ""
+                            ) { target ->
+                                Text(text = target)
+                            }
 
+                            IconButton(onClick = {
+                                viewModel.writeTheme(!themeIcon)
+                            }) {
+                                Icon(
+                                    imageVector = if (themeIcon) Icons.Default.LightMode else Icons.Default.DarkMode,
+                                    null,
+                                    tint = Color(0xFFFFE67B)
+                                )
+                            }
+
+                        }
                     },
                     actions = {
                         AnimatedContent(
