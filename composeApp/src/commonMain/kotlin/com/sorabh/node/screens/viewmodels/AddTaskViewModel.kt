@@ -2,7 +2,6 @@ package com.sorabh.node.screens.viewmodels
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -74,6 +73,8 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
 
     val selectRepeatType = mutableStateOf(RepeatType.DAILY)
 
+    val taskDialogVisibility = mutableStateOf(false)
+
     fun onTaskTitleChanged(title: TextFieldValue) {
         taskTitle.value = title
     }
@@ -122,6 +123,10 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
         selectRepeatType.value = repeatType
     }
 
+    fun onTaskDialogVisible(isVisible: Boolean = false) {
+        taskDialogVisibility.value = isVisible
+    }
+
     fun saveTask(sendSnackBarEvent: (SnackBarEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskEntity(
@@ -140,12 +145,7 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
                 sendSnackBarEvent(ShowSnackBarEvent("Task Already Exists", Icons.Default.Close))
             else {
                 taskRepository.insertTask(task)
-                sendSnackBarEvent(
-                    ShowSnackBarEvent(
-                        "Task \"${task.title}\" Added",
-                        Icons.Default.Done
-                    )
-                )
+                onTaskDialogVisible(true)
             }
         }
     }

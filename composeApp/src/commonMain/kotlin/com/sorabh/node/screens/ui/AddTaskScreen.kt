@@ -38,6 +38,7 @@ import com.sorabh.node.components.AddInput
 import com.sorabh.node.components.OutlinedDropdown
 import com.sorabh.node.components.ShowDatePicker
 import com.sorabh.node.components.ShowTimePicker
+import com.sorabh.node.components.TaskAddedDialog
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AddTaskViewModel
 import com.sorabh.node.utils.AddTaskEvent
@@ -314,4 +315,11 @@ private fun AddTaskContent(
             }
         }
     }
+
+    if (viewModel.taskDialogVisibility.value)
+        TaskAddedDialog(
+            title = viewModel.taskTitle.value.text,
+            description = viewModel.taskDescription.value.text,
+            onDismiss = viewModel::onTaskDialogVisible
+        )
 }
