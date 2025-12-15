@@ -17,10 +17,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Article
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.nav.AllTaskNav
 import com.sorabh.node.nav.AppNavigation
 import com.sorabh.node.nav.BottomBar
@@ -74,6 +77,10 @@ fun App() {
     val snackBarIcon = remember { mutableStateOf<ImageVector?>(null) }
     val snackBarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination
+    val topDestination =
+        currentDestination?.hasRoute<TodayTaskNav>() == true || currentDestination?.hasRoute<ImportantTaskNav>() == true || currentDestination?.hasRoute<AllTaskNav>() == true || currentDestination?.hasRoute<RepeatTaskNav>() == true
+
     val themeIcon = viewModel.readTheme.collectAsState(false).value
 
     LaunchedEffect(Unit) {
@@ -213,6 +220,14 @@ fun App() {
                         }
                     }
                 }
+            },
+            floatingActionButton = {
+                if (topDestination)
+                    FloatingActionButton(onClick = {
+                        navController.navigate(AddTaskNav)
+                    }) {
+                        Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
+                    }
             }
         ) {
             AppNavigation(navController = navController, viewModel = viewModel, paddingValues = it)
