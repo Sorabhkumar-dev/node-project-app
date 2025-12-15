@@ -122,7 +122,7 @@ fun App() {
                                 Icon(
                                     imageVector = if (themeIcon) Icons.Default.LightMode else Icons.Default.DarkMode,
                                     null,
-                                    tint = Color(0xFFFFE67B)
+                                    tint = MaterialTheme.colorScheme.onSurface
                                 )
                             }
 
