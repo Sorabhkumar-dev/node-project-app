@@ -1,5 +1,6 @@
 package com.sorabh.node.nav
 
+import com.sorabh.node.utils.TaskPriority
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,7 +22,7 @@ data object TodayTaskNav : NavKey, BottomBar
 data object RepeatTaskNav : NavKey, BottomBar
 
 @Serializable
-data object AddTaskNav : NavKey, BottomBarHider
+data class AddTaskNav(val priority: TaskPriority = TaskPriority.MEDIUM,val isRepeatable: Boolean = false) : NavKey, BottomBarHider
 
 @Serializable
 data object ImportantTaskNav : NavKey, BottomBar

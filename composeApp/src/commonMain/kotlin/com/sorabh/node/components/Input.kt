@@ -1,7 +1,14 @@
 package com.sorabh.node.components
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -11,17 +18,117 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
+
+@Composable
+fun AddInput(
+    modifier: Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+    label: StringResource? = null,
+    maxLines: Int = 1,
+    minLines: Int = 1,
+    readOnly: Boolean = false,
+    color: Color? = null,
+    textFieldValue: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit
+) {
+    BasicTextField(
+        modifier = modifier,
+        value = textFieldValue,
+        textStyle = textStyle,
+        onValueChange = onValueChange,
+        readOnly = readOnly,
+        minLines = minLines,
+        maxLines = maxLines,
+        decorationBox = {
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.extraSmall,
+                elevation = CardDefaults.elevatedCardElevation(3.dp),
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                label?.let {
+                    Text(
+                        text = stringResource(label),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+                    it()
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+    )
+}
+
+@Composable
+fun AddInput(
+    modifier: Modifier,
+    label: StringResource? = null,
+    placeHolder: StringResource? = null,
+    maxLines: Int = 1,
+    readOnly: Boolean = false,
+    imageVector: ImageVector? = null,
+    onIconBtnClick: () -> Unit = {},
+    text: String,
+    onValueChange: (String) -> Unit = {}
+) {
+
+    TextField(
+        modifier = modifier,
+        value = text,
+        onValueChange = onValueChange,
+        readOnly = readOnly,
+        maxLines = maxLines,
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        placeholder = {
+            placeHolder?.let {
+                Text(
+                    text = stringResource(placeHolder),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Light
+                )
+            }
+        },
+        label = {
+            label?.let {
+                Text(
+                    text = stringResource(label),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        },
+        leadingIcon = {
+            imageVector?.let {
+                IconButton(onClick = onIconBtnClick) {
+                    Icon(imageVector = it, null, tint = MaterialTheme.colorScheme.primary)
+                }
+            }
+        }
+    )
+}
 
 @Composable
 fun OutlinedAddInput(
@@ -101,7 +208,6 @@ fun <T> OutlinedDropdown(
     label: String? = null,
     items: List<T>,
     selectedItem: T?,
-    // Helper to convert your object T to a String for display
     itemLabel: (T) -> String = { it.toString() },
     onItemSelected: (T) -> Unit,
 ) {

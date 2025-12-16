@@ -87,7 +87,7 @@ fun AppNavigation(
 
         composable<AddTaskNav> {
             AddTaskScreen(
-                viewModel = koinViewModel(),
+                viewModel = koinViewModel{ parametersOf(it.toRoute<AddTaskNav>()) },
                 sharedViewModel = viewModel,
                 sendSnackBarEvent = viewModel::sendEvent,
                 sendTopBarEvent = viewModel::onAppBarChanged

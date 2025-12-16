@@ -46,7 +46,7 @@ fun RepeatTaskScreen(
             AppBar(
                 title = Res.string.repeating_task,
                 icon = Icons.Default.Add,
-                event = NavigateEvent(AddTaskNav)
+                event = NavigateEvent(AddTaskNav(isRepeatable = true))
             )
         )
     }
@@ -61,7 +61,7 @@ private fun RepeatTaskContent(onNavigate: (NavKey) -> Unit) {
 
     if (repeatingTasks.isEmpty())
         EmptyTaskState(image = Res.drawable.repeating_tasks) {
-            onNavigate(AddTaskNav)
+            onNavigate(AddTaskNav(isRepeatable = true))
         }
     else
         LazyColumn(

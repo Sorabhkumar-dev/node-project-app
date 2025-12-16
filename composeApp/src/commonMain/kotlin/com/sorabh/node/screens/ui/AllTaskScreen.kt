@@ -46,7 +46,7 @@ fun AllTaskScreen(
             AppBar(
                 title = Res.string.all_task,
                 icon = Icons.Default.Add,
-                event = NavigateEvent(AddTaskNav)
+                event = NavigateEvent(AddTaskNav())
             )
         )
     }
@@ -60,7 +60,7 @@ private fun AllTaskContent(onNavigate: (NavKey) -> Unit) {
 
     if (todayTasks.isEmpty())
         EmptyTaskState(image = Res.drawable.all_tasks) {
-            onNavigate(AddTaskNav)
+            onNavigate(AddTaskNav())
         }
     else
         LazyColumn(

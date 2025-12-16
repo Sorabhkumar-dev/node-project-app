@@ -45,7 +45,7 @@ fun TodayTaskScreen(
             AppBar(
                 title = Res.string.today_task,
                 icon = Icons.Default.Add,
-                event = NavigateEvent(AddTaskNav)
+                event = NavigateEvent(AddTaskNav())
             )
         )
     }
@@ -59,7 +59,7 @@ private fun TodayTaskContent( onNavigate: (NavKey) -> Unit) {
 
     if (todayTasks.isEmpty())
         EmptyTaskState {
-            onNavigate(AddTaskNav)
+            onNavigate(AddTaskNav())
         }
     else
         LazyColumn(

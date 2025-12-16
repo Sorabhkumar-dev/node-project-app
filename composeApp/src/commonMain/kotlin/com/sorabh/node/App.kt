@@ -37,12 +37,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,6 +59,7 @@ import com.sorabh.node.theme.BlackAndWhiteDarkScheme
 import com.sorabh.node.theme.BlackAndWhiteScheme
 import com.sorabh.node.utils.DismissSnackBarEvent
 import com.sorabh.node.utils.ShowSnackBarEvent
+import com.sorabh.node.utils.TaskPriority
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 import org.jetbrains.compose.resources.stringResource
@@ -155,42 +154,41 @@ fun App() {
                 )
             },
             bottomBar = {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                NavigationBar {
-                    viewModel.bottomBar.forEach {
-                        NavigationBarItem(
-                            selected = currentDestination?.hasRoute(it::class) == true,
-                            icon = {
-                                it as BottomBar
-                                Icon(
-                                    imageVector = when (it) {
-                                        AllTaskNav -> Icons.Rounded.Today
-                                        ImportantTaskNav -> Icons.Rounded.Star
-                                        RepeatTaskNav -> Icons.AutoMirrored.Rounded.Article
-                                        TodayTaskNav -> Icons.Rounded.Repeat
-                                    },
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp)
-                                )
-                            },
-                            onClick = {
-                                navController.navigate(it) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                if (topDestination)
+                    NavigationBar {
+                        viewModel.bottomBar.forEach {
+                            NavigationBarItem(
+                                selected = currentDestination.hasRoute(it::class),
+                                icon = {
+                                    it as BottomBar
+                                    Icon(
+                                        imageVector = when (it) {
+                                            AllTaskNav -> Icons.AutoMirrored.Rounded.Article
+                                            ImportantTaskNav -> Icons.Rounded.Star
+                                            RepeatTaskNav -> Icons.Rounded.Repeat
+                                            TodayTaskNav -> Icons.Rounded.Today
+                                        },
+                                        contentDescription = null,
+                                        modifier = Modifier.size(30.dp)
+                                    )
+                                },
+                                onClick = {
+                                    navController.navigate(it) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = MaterialTheme.colorScheme.primary.copy(
-                                    0.15f
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = MaterialTheme.colorScheme.primary.copy(
+                                        0.15f
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
-                }
             },
             snackbarHost = {
                 SnackbarHost(
@@ -224,7 +222,12 @@ fun App() {
             floatingActionButton = {
                 if (topDestination)
                     FloatingActionButton(onClick = {
-                        navController.navigate(AddTaskNav)
+                        navController.navigate(
+                            AddTaskNav(
+                                priority = if (currentDestination.hasRoute<ImportantTaskNav>()) TaskPriority.HIGH else TaskPriority.MEDIUM,
+                                isRepeatable = currentDestination.hasRoute<RepeatTaskNav>()
+                            )
+                        )
                     }) {
                         Icon(imageVector = Icons.Rounded.Add, contentDescription = null)
                     }

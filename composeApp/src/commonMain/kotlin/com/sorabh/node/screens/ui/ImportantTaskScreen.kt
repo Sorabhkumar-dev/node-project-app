@@ -23,6 +23,7 @@ import com.sorabh.node.nav.NavKey
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.ImportantTaskViewModel
 import com.sorabh.node.utils.NavigateEvent
+import com.sorabh.node.utils.TaskPriority
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.empty_task
 import node.composeapp.generated.resources.important_task
@@ -45,7 +46,7 @@ fun ImportantTaskScreen(
             AppBar(
                 title = Res.string.important_task,
                 icon = Icons.Default.Add,
-                event = NavigateEvent(AddTaskNav)
+                event = NavigateEvent(AddTaskNav(TaskPriority.HIGH))
             )
         )
     }
@@ -60,7 +61,7 @@ private fun ImportantTaskContent(onNavigate: (NavKey) -> Unit) {
 
     if (todayTasks.isEmpty())
         EmptyTaskState(image = Res.drawable.empty_task) {
-            onNavigate(AddTaskNav)
+            onNavigate(AddTaskNav(TaskPriority.HIGH))
         }
     else
         LazyColumn(

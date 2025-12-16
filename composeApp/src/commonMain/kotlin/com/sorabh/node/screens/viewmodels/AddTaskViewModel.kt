@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.database.TaskRepository
+import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
@@ -29,11 +30,9 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel() {
+class AddTaskViewModel(private val taskRepository: TaskRepository,private val navData: AddTaskNav) : ViewModel() {
     val taskTitle = mutableStateOf(TextFieldValue(""))
     val taskDescription = mutableStateOf(TextFieldValue(""))
-
-    val isAddMoreInfo = mutableStateOf(false)
 
     @OptIn(ExperimentalTime::class)
     private val currentDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
@@ -66,10 +65,10 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
     val isShowDatePicker = mutableStateOf(false)
     val isShowTimePicker = mutableStateOf(false)
 
-    val selectTaskPriority = mutableStateOf(TaskPriority.MEDIUM)
+    val selectTaskPriority = mutableStateOf(navData.priority)
     val selectedTaskCategory = mutableStateOf(TaskType.WORK)
 
-    val isTaskRepeatable = mutableStateOf(false)
+    val isTaskRepeatable = mutableStateOf(navData.isRepeatable)
 
     val selectRepeatType = mutableStateOf(RepeatType.DAILY)
 
@@ -79,9 +78,6 @@ class AddTaskViewModel(private val taskRepository: TaskRepository) : ViewModel()
         taskTitle.value = title
     }
 
-    fun addMoreInfo(addMoreInfo: Boolean) {
-        isAddMoreInfo.value = addMoreInfo
-    }
 
     fun onTaskDescriptionChanged(description: TextFieldValue) {
         taskDescription.value = description
