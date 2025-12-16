@@ -24,7 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun AddInput(
+fun OutlinedAddInput(
     modifier: Modifier,
     placeHolder: StringResource,
     maxLines: Int = 1,
@@ -59,7 +59,7 @@ fun AddInput(
 }
 
 @Composable
-fun AddInput(
+fun OutlinedAddInput(
     modifier: Modifier,
     label: StringResource? = null,
     maxLines: Int = 1,

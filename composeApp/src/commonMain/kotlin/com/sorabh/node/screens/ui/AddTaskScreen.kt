@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorabh.node.AppViewModel
-import com.sorabh.node.components.AddInput
+import com.sorabh.node.components.OutlinedAddInput
 import com.sorabh.node.components.OutlinedDropdown
 import com.sorabh.node.components.ShowDatePicker
 import com.sorabh.node.components.ShowTimePicker
@@ -123,7 +123,7 @@ private fun AddTaskContent(
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        AddInput(
+        OutlinedAddInput(
             modifier = Modifier.fillMaxWidth(),
             placeHolder = Res.string.add_a_task,
             textFieldValue = viewModel.taskTitle.value,
@@ -139,7 +139,7 @@ private fun AddTaskContent(
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        AddInput(
+        OutlinedAddInput(
             modifier = Modifier.fillMaxWidth(),
             placeHolder = Res.string.task_description,
             minLines = 4,
@@ -177,7 +177,7 @@ private fun AddTaskContent(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                AddInput(
+                OutlinedAddInput(
                     modifier = Modifier.fillMaxWidth(),
                     imageVector = Icons.Default.CalendarMonth,
                     onIconBtnClick = {
@@ -202,7 +202,7 @@ private fun AddTaskContent(
                 )
 
 
-                AddInput(
+                OutlinedAddInput(
                     modifier = Modifier.fillMaxWidth(),
                     imageVector = Icons.Default.Watch,
                     onIconBtnClick = {
