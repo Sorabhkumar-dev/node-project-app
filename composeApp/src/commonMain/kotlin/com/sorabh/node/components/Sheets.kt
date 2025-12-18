@@ -65,6 +65,8 @@ fun TaskFilterBottomSheet(
 fun TaskFilterSheet(
     modifier: Modifier,
     onDismiss: () -> Unit,
+    startDate: String? = null,
+    endDate: String? = null,
     selectedStatus: List<TaskStatus>,
     selectedPriority: List<TaskPriority>,
     selectedCategory: List<TaskCategory>,
@@ -220,7 +222,7 @@ fun TaskFilterSheet(
                     },
                     label = {
                         Text(
-                            text = it.value,
+                            text = if (it == TaskDateRange.CUSTOM_RANGE && it == selectedDataRange) "$startDate - $endDate" else it.value,
                             color = if (it == selectedDataRange) Color(0xFF42A5F5) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

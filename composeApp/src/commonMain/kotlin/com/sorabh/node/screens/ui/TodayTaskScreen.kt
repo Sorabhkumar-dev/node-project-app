@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorabh.node.AppViewModel
 import com.sorabh.node.components.EmptyTaskState
+import com.sorabh.node.components.ShowDateRangePicker
 import com.sorabh.node.components.SwipeableTaskCard
 import com.sorabh.node.components.TaskCard
 import com.sorabh.node.components.TaskFilterBottomSheet
@@ -30,6 +31,8 @@ import com.sorabh.node.nav.NavKey
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
 import com.sorabh.node.utils.FilterTaskEvent
+import com.sorabh.node.utils.TaskDateRange
+import com.sorabh.node.utils.standardFormat
 import kotlinx.coroutines.launch
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
@@ -99,6 +102,15 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
             }
         }
 
+    if (viewModel.showDateRangePickerState.value)
+        ShowDateRangePicker(
+            onDateRangeSelected = {
+                viewModel.onDateRangeSelected(it)
+                viewModel.onDateRangePickerChanged(false)
+            },
+            onDismiss = viewModel::onDateRangePickerChanged
+        )
+
 
     if (filterBottomSheet.isVisible)
         TaskFilterBottomSheet(
@@ -109,6 +121,8 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
             TaskFilterSheet(
                 modifier = Modifier.fillMaxWidth(),
                 onDismiss = { hideFilterSheet() },
+                startDate = viewModel.startOfDay.value.standardFormat(),
+                endDate = viewModel.startOfNextDay.value.standardFormat(),
                 selectedStatus = viewModel.selectedStatus,
                 selectedPriority = viewModel.selectedPriority,
                 selectedCategory = viewModel.selectedCategory,
@@ -116,7 +130,11 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
                 onStatusChanged = viewModel::onStatusChanged,
                 onPriorityChanged = viewModel::onPriorityChanged,
                 onCategoryChanged = viewModel::onCategoryChanged,
-                onDateRangeClick = viewModel::onTaskDateRangeChanged
+                onDateRangeClick = {
+                        viewModel.onTaskDateRangeChanged(it)
+                    if (it == TaskDateRange.CUSTOM_RANGE)
+                        viewModel.onDateRangePickerChanged(true)
+                }
             ) {
                 viewModel.getTodayTasks()
                 hideFilterSheet()

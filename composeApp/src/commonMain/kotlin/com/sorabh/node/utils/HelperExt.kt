@@ -1,6 +1,7 @@
 package com.sorabh.node.utils
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
@@ -8,13 +9,24 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
 fun currentLocalDateTime(): LocalDateTime {
-    val currentMoment: kotlin.time.Instant = kotlin.time.Clock.System.now()
-    val datetimeInSystemZone: LocalDateTime = currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
+    val currentMoment: Instant = kotlin.time.Clock.System.now()
+    val datetimeInSystemZone: LocalDateTime =
+        currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
     return datetimeInSystemZone
 }
+
+fun LocalDateTime.standardFormat() =
+    format(LocalDateTime.Format {
+        day()
+        char(' ')
+        monthName(MonthNames.ENGLISH_ABBREVIATED)
+        char(' ')
+        year()
+    })
 
 fun LocalDateTime.formatTaskDate() =
     format(LocalDateTime.Format {
@@ -35,7 +47,7 @@ fun LocalDateTime.formatTaskDate2() =
         char(':')
         minute()
         char(' ')
-        amPmMarker("AM","PM")
+        amPmMarker("AM", "PM")
         char(' ')
         day()
         char(' ')
@@ -43,6 +55,16 @@ fun LocalDateTime.formatTaskDate2() =
         char(' ')
         year()
     })
+
+@OptIn(ExperimentalTime::class)
+fun Long.toLocalDate(
+    timeZone: TimeZone = TimeZone.currentSystemDefault()
+): LocalDate {
+    return Instant
+        .fromEpochMilliseconds(this)
+        .toLocalDateTime(timeZone)
+        .date
+}
 
 
 val Color.main: Color get() = this.copy(0.7f)

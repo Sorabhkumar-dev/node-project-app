@@ -100,6 +100,6 @@ fun TaskDateRange.toDateTimeRange(
             )
         }
 
-        else -> throw Exception("Wrong input provided!")
+        TaskDateRange.CUSTOM_RANGE -> DateTimeRange(null,null)
     }
 }

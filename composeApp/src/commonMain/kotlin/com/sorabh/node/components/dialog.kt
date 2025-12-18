@@ -23,6 +23,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,10 +52,56 @@ import com.sorabh.node.theme.AbsoluteWhite
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.cancel
 import node.composeapp.generated.resources.okay
+import node.composeapp.generated.resources.select_date_range
 import node.composeapp.generated.resources.select_time
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+
+
+@Composable
+fun ShowDateRangePicker(
+    onDateRangeSelected: (Pair<Long?, Long?>) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val dateRangePickerState = rememberDateRangePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDateRangeSelected(
+                        Pair(
+                            dateRangePickerState.selectedStartDateMillis,
+                            dateRangePickerState.selectedEndDateMillis
+                        )
+                    )
+                    onDismiss()
+                }
+            ) {
+                Text(text = stringResource(Res.string.okay))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(Res.string.cancel))
+            }
+        }
+    ) {
+        DateRangePicker(
+            state = dateRangePickerState,
+            title = {
+                Text(text = stringResource(Res.string.select_date_range))
+            },
+            showModeToggle = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(500.dp)
+                .padding(16.dp)
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
@@ -211,7 +259,6 @@ private fun ShowTimeDialog(
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
