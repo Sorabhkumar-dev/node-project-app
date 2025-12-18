@@ -62,7 +62,7 @@ import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.nav.TaskDetailNav
 import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskStatus
-import com.sorabh.node.utils.TaskType
+import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.color
 import com.sorabh.node.utils.container
 import com.sorabh.node.utils.currentLocalDateTime
@@ -99,12 +99,12 @@ fun TaskCard(
                 .drawBehind {
                     val stripWidthPx = stripWidthDp.toPx()
                     drawRect(
-                        color = task.taskType.color.main,
+                        color = task.taskCategory.color.main,
                         topLeft = Offset.Zero,
                         size = Size(width = stripWidthPx, height = size.height)
                     )
                 }
-                .background(task.taskType.color.container, MaterialTheme.shapes.small)
+                .background(task.taskCategory.color.container, MaterialTheme.shapes.small)
                 .padding(16.dp)
         ) {
 
@@ -174,12 +174,12 @@ fun TaskCard(
 
                 // Task Type Chip (Minimal)
                 Surface(
-                    color = task.taskType.color.container,
+                    color = task.taskCategory.color.container,
                     shape = CircleShape
                 ) {
                     Text(
-                        text = task.taskType.name.lowercase().capitalize(),
-                        color = task.taskType.color,
+                        text = task.taskCategory.name.lowercase().capitalize(),
+                        color = task.taskCategory.color,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -250,7 +250,7 @@ fun TaskCardPreview() {
                     title = "Finish Project Documentation",
                     description = "Write the technical specs and api references for the client.",
                     dateTime = currentLocalDateTime(),
-                    taskType = TaskType.WORK,
+                    taskCategory = TaskCategory.WORK,
                     createdAt = currentLocalDateTime(),
                     updatedAt = currentLocalDateTime()
                 )
@@ -263,7 +263,7 @@ fun TaskCardPreview() {
                     email = "sorabhkumar@gmail.com",
                     title = "Buy Groceries",
                     dateTime = currentLocalDateTime(),
-                    taskType = TaskType.PERSONAL,
+                    taskCategory = TaskCategory.PERSONAL,
                     isRepeatable = true,
                     repeatType = RepeatType.WEEKLY,
                     createdAt = currentLocalDateTime(),

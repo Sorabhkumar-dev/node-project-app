@@ -198,7 +198,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                         )
                     }
 
-                    taskDetail?.taskType?.let {
+                    taskDetail?.taskCategory?.let {
                         ElevatedFilterChip(
                             onClick = {},
                             shape = MaterialTheme.shapes.medium,

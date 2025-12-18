@@ -1,5 +1,8 @@
 package com.sorabh.node.database
 
+import com.sorabh.node.utils.TaskCategory
+import com.sorabh.node.utils.TaskPriority
+import com.sorabh.node.utils.TaskStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
@@ -14,6 +17,19 @@ interface TaskRepository {
     fun getTodayTasks(start: LocalDateTime, end: LocalDateTime): Flow<List<TaskEntity>>
     fun getTask(id: Long): Flow<TaskEntity>
     fun getAllTasks(): Flow<List<TaskEntity>>
+    fun getFilteredTasks(
+        filterStatus: Boolean,
+        statuses: List<TaskStatus>,
+
+        filterType: Boolean,
+        types: List<TaskCategory>,
+
+        filterPriority: Boolean,
+        priorities: List<TaskPriority>,
+
+        startDateTime: LocalDateTime?,
+        endDateTime: LocalDateTime?
+    ): Flow<List<TaskEntity>>
 }
 
 class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
@@ -29,4 +45,26 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
 
     override fun getTask(id: Long): Flow<TaskEntity> = taskDao.getTask(id)
     override fun getAllTasks(): Flow<List<TaskEntity>> = taskDao.getAllTasks()
+    override fun getFilteredTasks(
+        filterStatus: Boolean,
+        statuses: List<TaskStatus>,
+
+        filterType: Boolean,
+        types: List<TaskCategory>,
+
+        filterPriority: Boolean,
+        priorities: List<TaskPriority>,
+
+        startDateTime: LocalDateTime?,
+        endDateTime: LocalDateTime?
+    ): Flow<List<TaskEntity>> = taskDao.getFilteredTasks(
+        filterStatus,
+        statuses,
+        filterType,
+        types,
+        filterPriority,
+        priorities,
+        startDateTime,
+        endDateTime
+    )
 }

@@ -103,7 +103,7 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
     if (filterBottomSheet.isVisible)
         TaskFilterBottomSheet(
             modifier = Modifier.fillMaxWidth(),
-            sheetState = rememberModalBottomSheetState(),
+            sheetState = filterBottomSheet,
             onDismiss = { hideFilterSheet() }
         ) {
             TaskFilterSheet(
@@ -117,6 +117,9 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
                 onPriorityChanged = viewModel::onPriorityChanged,
                 onCategoryChanged = viewModel::onCategoryChanged,
                 onDateRangeClick = viewModel::onTaskDateRangeChanged
-            )
+            ) {
+                viewModel.getTodayTasks()
+                hideFilterSheet()
+            }
         }
 }

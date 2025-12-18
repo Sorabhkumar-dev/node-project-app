@@ -13,7 +13,7 @@ import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskPriority
-import com.sorabh.node.utils.TaskType
+import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -30,7 +30,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class AddTaskViewModel(private val taskRepository: TaskRepository,private val navData: AddTaskNav) : ViewModel() {
+class AddTaskViewModel(private val taskRepository: TaskRepository, navData: AddTaskNav) : ViewModel() {
     val taskTitle = mutableStateOf(TextFieldValue(""))
     val taskDescription = mutableStateOf(TextFieldValue(""))
 
@@ -66,7 +66,7 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
     val isShowTimePicker = mutableStateOf(false)
 
     val selectTaskPriority = mutableStateOf(navData.priority)
-    val selectedTaskCategory = mutableStateOf(TaskType.WORK)
+    val selectedTaskCategory = mutableStateOf(TaskCategory.WORK)
 
     val isTaskRepeatable = mutableStateOf(navData.isRepeatable)
 
@@ -107,8 +107,8 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
         selectTaskPriority.value = priority
     }
 
-    fun onTaskCategorySelected(taskType: TaskType) {
-        selectedTaskCategory.value = taskType
+    fun onTaskCategorySelected(taskCategory: TaskCategory) {
+        selectedTaskCategory.value = taskCategory
     }
 
     fun onTaskRepeatableChanged(isRepeatable: Boolean) {
@@ -131,7 +131,7 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
                 description = taskDescription.value.text,
                 dateTime = LocalDateTime(taskDate.value, taskTime.value),
                 priority = selectTaskPriority.value,
-                taskType = selectedTaskCategory.value,
+                taskCategory = selectedTaskCategory.value,
                 isRepeatable = isTaskRepeatable.value,
                 repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,
                 createdAt = currentLocalDateTime(),

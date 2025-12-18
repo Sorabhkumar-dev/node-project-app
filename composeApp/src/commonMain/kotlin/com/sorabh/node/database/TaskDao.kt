@@ -5,7 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.TaskPriority
+import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
@@ -47,4 +49,28 @@ interface TaskDao {
 
     @Query("SELECT * FROM TaskEntity  WHERE markAsDelete = 0 ORDER BY dateTime DESC")
     fun getAllTasks(): Flow<List<TaskEntity>>
+
+    @Query("""
+    SELECT * FROM TaskEntity
+    WHERE markAsDelete = 0
+    AND (:filterStatus = 0 OR taskStatus IN (:statuses))
+    AND (:filterType = 0 OR taskCategory IN (:types))
+    AND (:filterPriority = 0 OR priority IN (:priorities))
+    AND (:startDateTime IS NULL OR dateTime >= :startDateTime)
+    AND (:endDateTime IS NULL OR dateTime <= :endDateTime)
+    ORDER BY dateTime DESC
+""")
+    fun getFilteredTasks(
+        filterStatus: Boolean,
+        statuses: List<TaskStatus>,
+
+        filterType: Boolean,
+        types: List<TaskCategory>,
+
+        filterPriority: Boolean,
+        priorities: List<TaskPriority>,
+
+        startDateTime: LocalDateTime?,
+        endDateTime: LocalDateTime?
+    ): Flow<List<TaskEntity>>
 }

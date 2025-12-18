@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedFilterChip
@@ -25,16 +27,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sorabh.node.utils.TaskDateRange
 import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskStatus
-import com.sorabh.node.utils.TaskType
+import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.color
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.category
 import node.composeapp.generated.resources.filters
 import node.composeapp.generated.resources.priority
+import node.composeapp.generated.resources.select_date_range
 import node.composeapp.generated.resources.show_task
 import node.composeapp.generated.resources.status
 import org.jetbrains.compose.resources.stringResource
@@ -63,12 +67,13 @@ fun TaskFilterSheet(
     onDismiss: () -> Unit,
     selectedStatus: List<TaskStatus>,
     selectedPriority: List<TaskPriority>,
-    selectedCategory: List<TaskType>,
-    selectedDataRange: TaskDateRange,
+    selectedCategory: List<TaskCategory>,
+    selectedDataRange: TaskDateRange?,
     onStatusChanged: (TaskStatus) -> Unit,
     onPriorityChanged: (TaskPriority) -> Unit,
-    onCategoryChanged: (TaskType) -> Unit,
-    onDateRangeClick: (TaskDateRange) -> Unit
+    onCategoryChanged: (TaskCategory) -> Unit,
+    onDateRangeClick: (TaskDateRange) -> Unit,
+    onShowTaskClick: () -> Unit
 ) {
     Column(modifier = modifier) {
         Row(
@@ -79,6 +84,7 @@ fun TaskFilterSheet(
             Text(
                 text = stringResource(Res.string.filters),
                 style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
             )
 
             IconButton(onClick = onDismiss) {
@@ -92,7 +98,8 @@ fun TaskFilterSheet(
 
         Text(
             text = stringResource(Res.string.status),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            fontWeight = FontWeight.SemiBold
         )
 
         Row(
@@ -123,7 +130,8 @@ fun TaskFilterSheet(
 
         Text(
             text = stringResource(Res.string.priority),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            fontWeight = FontWeight.SemiBold
         )
 
         FlowRow(
@@ -154,14 +162,15 @@ fun TaskFilterSheet(
 
         Text(
             text = stringResource(Res.string.category),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            fontWeight = FontWeight.SemiBold
         )
 
         FlowRow(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            TaskType.entries.forEach {
+            TaskCategory.entries.forEach {
                 ElevatedFilterChip(
                     selected = it in selectedCategory,
                     colors = FilterChipDefaults.elevatedFilterChipColors(
@@ -184,9 +193,13 @@ fun TaskFilterSheet(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
-            text = stringResource(Res.string.category),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+            text = stringResource(Res.string.select_date_range),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            fontWeight = FontWeight.SemiBold
         )
 
         FlowRow(
@@ -207,7 +220,7 @@ fun TaskFilterSheet(
                     },
                     label = {
                         Text(
-                            text = it.name,
+                            text = it.value,
                             color = if (it == selectedDataRange) Color(0xFF42A5F5) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -217,8 +230,17 @@ fun TaskFilterSheet(
 
             Spacer(modifier = Modifier.height(70.dp))
 
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+            Button(
+                onClick = onShowTaskClick,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                shape = MaterialTheme.shapes.small
+            ) {
                 Text(text = stringResource(Res.string.show_task))
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))

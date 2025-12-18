@@ -49,7 +49,7 @@ import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskPriority
-import com.sorabh.node.utils.TaskType
+import com.sorabh.node.utils.TaskCategory
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.add_new_task
 import node.composeapp.generated.resources.add_task
@@ -188,7 +188,7 @@ private fun AddTaskContent(
             ) {
                 OutlinedDropdown(
                     modifier = Modifier.weight(0.46f),
-                    items = TaskType.entries,
+                    items = TaskCategory.entries,
                     itemLabel = { it.value },
                     selectedItem = viewModel.selectedTaskCategory.value,
                     onItemSelected = viewModel::onTaskCategorySelected
