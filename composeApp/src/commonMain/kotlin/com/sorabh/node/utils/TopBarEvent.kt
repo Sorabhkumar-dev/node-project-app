@@ -9,4 +9,4 @@ data class NavigateEvent(val route: NavKey) : TopBarEvent
 
 data object AddTaskEvent : TopBarEvent
 
-data object FilterTaskEvent : TopBarEvent
+data class FilterTaskEvent(val isFilterApplied: Boolean) : TopBarEvent

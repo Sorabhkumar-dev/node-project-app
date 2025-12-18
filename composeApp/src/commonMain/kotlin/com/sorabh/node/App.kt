@@ -21,6 +21,8 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Repeat
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Today
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -58,6 +60,7 @@ import com.sorabh.node.nav.TodayTaskNav
 import com.sorabh.node.theme.BlackAndWhiteDarkScheme
 import com.sorabh.node.theme.BlackAndWhiteScheme
 import com.sorabh.node.utils.DismissSnackBarEvent
+import com.sorabh.node.utils.FilterTaskEvent
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.TaskPriority
 import node.composeapp.generated.resources.Res
@@ -136,19 +139,32 @@ fun App() {
                             },
                             label = ""
                         ) { target ->
-                            IconButton(onClick = {
-                                appBarState?.event?.let { event ->
-                                    viewModel.sendEvent(event)
+                            BadgedBox(
+                                badge = {
+                                    if (appBarState?.event is FilterTaskEvent && appBarState.event.isFilterApplied) {
+                                        Badge(
+                                            modifier = Modifier.size(6.dp),
+                                            containerColor = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
-                            }) {
-                                target?.let {
-                                    Icon(
-                                        imageVector = target,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(36.dp)
-                                    )
+                            ) {
+                                IconButton(onClick = {
+                                    appBarState?.event?.let { event ->
+                                        viewModel.sendEvent(event)
+                                    }
+                                }) {
+                                    target?.let {
+                                        Icon(
+                                            imageVector = target,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(36.dp)
+                                        )
+                                    }
                                 }
                             }
+
+
                         }
                     }
                 )

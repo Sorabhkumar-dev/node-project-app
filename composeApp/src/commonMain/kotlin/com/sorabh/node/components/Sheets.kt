@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.color
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.category
+import node.composeapp.generated.resources.clear_filter
 import node.composeapp.generated.resources.filters
 import node.composeapp.generated.resources.priority
 import node.composeapp.generated.resources.select_date_range
@@ -75,6 +77,7 @@ fun TaskFilterSheet(
     onPriorityChanged: (TaskPriority) -> Unit,
     onCategoryChanged: (TaskCategory) -> Unit,
     onDateRangeClick: (TaskDateRange) -> Unit,
+    clearFilter: () -> Unit,
     onShowTaskClick: () -> Unit
 ) {
     Column(modifier = modifier) {
@@ -243,6 +246,16 @@ fun TaskFilterSheet(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedButton(
+                onClick = clearFilter,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(text = stringResource(Res.string.clear_filter))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
