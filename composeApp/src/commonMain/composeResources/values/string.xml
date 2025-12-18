@@ -17,6 +17,15 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
 
+    <string name="status">Status</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="select_date_range">Select Date Range</string>
+
+    <string name="show_task">Show Task</string>
+
+    <string name="filters">Filters</string>
+
     <string name="repeat">Repeat</string>
 
     <string name="add_task">Add Task</string>

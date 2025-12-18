@@ -3,13 +3,18 @@ package com.sorabh.node.screens.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -18,25 +23,35 @@ import com.sorabh.node.AppViewModel
 import com.sorabh.node.components.EmptyTaskState
 import com.sorabh.node.components.SwipeableTaskCard
 import com.sorabh.node.components.TaskCard
+import com.sorabh.node.components.TaskFilterBottomSheet
+import com.sorabh.node.components.TaskFilterSheet
 import com.sorabh.node.nav.AddTaskNav
 import com.sorabh.node.nav.NavKey
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
-import com.sorabh.node.utils.NavigateEvent
+import com.sorabh.node.utils.FilterTaskEvent
+import kotlinx.coroutines.launch
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
 import org.koin.compose.viewmodel.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodayTaskScreen(
     sharedViewModel: AppViewModel,
     onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit,
 ) {
+    val filterBottomSheet = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         sharedViewModel.topBarEvent.collect {
-            if (it is NavigateEvent)
-                onNavigate(it.route)
+            if (it is FilterTaskEvent)
+                coroutineScope.launch {
+                    filterBottomSheet.show()
+                }
+
         }
     }
 
@@ -44,18 +59,24 @@ fun TodayTaskScreen(
         onAppBarChanged(
             AppBar(
                 title = Res.string.today_task,
-                icon = Icons.Default.Add,
-                event = NavigateEvent(AddTaskNav())
+                icon = Icons.Default.FilterAlt,
+                event = FilterTaskEvent
             )
         )
     }
-    TodayTaskContent(onNavigate = onNavigate)
+    TodayTaskContent(filterBottomSheet = filterBottomSheet, onNavigate = onNavigate)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TodayTaskContent( onNavigate: (NavKey) -> Unit) {
+private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey) -> Unit) {
     val viewModel = koinViewModel<TodayTaskViewModel>()
     val todayTasks = viewModel.todayTasks.collectAsState(emptyList()).value
+
+    val coroutineScope = rememberCoroutineScope()
+    val hideFilterSheet: () -> Unit = {
+        coroutineScope.launch { filterBottomSheet.hide() }
+    }
 
     if (todayTasks.isEmpty())
         EmptyTaskState {
@@ -73,8 +94,29 @@ private fun TodayTaskContent( onNavigate: (NavKey) -> Unit) {
                     onDelete = viewModel::deleteTask,
                     onComplete = viewModel::updateTask
                 ) { task ->
-                    TaskCard(task = task,onClick = onNavigate)
+                    TaskCard(task = task, onClick = onNavigate)
                 }
             }
+        }
+
+
+    if (filterBottomSheet.isVisible)
+        TaskFilterBottomSheet(
+            modifier = Modifier.fillMaxWidth(),
+            sheetState = rememberModalBottomSheetState(),
+            onDismiss = { hideFilterSheet() }
+        ) {
+            TaskFilterSheet(
+                modifier = Modifier.fillMaxWidth(),
+                onDismiss = { hideFilterSheet() },
+                selectedStatus = viewModel.selectedStatus,
+                selectedPriority = viewModel.selectedPriority,
+                selectedCategory = viewModel.selectedCategory,
+                selectedDataRange = viewModel.selectedDataRange.value,
+                onStatusChanged = viewModel::onStatusChanged,
+                onPriorityChanged = viewModel::onPriorityChanged,
+                onCategoryChanged = viewModel::onCategoryChanged,
+                onDateRangeClick = viewModel::onTaskDateRangeChanged
+            )
         }
 }

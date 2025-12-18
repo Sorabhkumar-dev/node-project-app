@@ -32,7 +32,7 @@ enum class TaskType(val value: String) {
 val TaskType.color: Color
     get() = when (this) {
         TaskType.WORK -> Color(0xFF007AFF)        // Strong Blue – focus, professionalism
-        TaskType.PERSONAL -> Color(0xFF8E8E93)    // Neutral Gray – personal / misc
+        TaskType.PERSONAL -> Color(0xFF78716C)    // Neutral Gray – personal / misc
         TaskType.HEALTH -> Color(0xFFFF3B30)      // Red – health, alerts, body
         TaskType.HOME -> Color(0xFF34C759)        // Fresh Green – home, nature, stability
         TaskType.FINANCE -> Color(0xFFFFCC00)     // Gold/Yellow – money, savings
@@ -40,7 +40,7 @@ val TaskType.color: Color
         TaskType.PROJECTS -> Color(0xFF5856D6)    // Indigo – deep work, long-term focus
         TaskType.GOALS -> Color(0xFFAF52DE)       // Purple – growth, vision, ambition
         TaskType.SHOPPING -> Color(0xFFFF6B6B)    // Coral - Feels fun, impulsive, purchase-oriented
-        TaskType.OTHER -> Color(0xFF000000)        // Black – misc
+        TaskType.OTHER -> Color(0xFF6B7280)       // Black – misc
         TaskType.SPORTS -> Color(0xFF4A90E2)
     }
 

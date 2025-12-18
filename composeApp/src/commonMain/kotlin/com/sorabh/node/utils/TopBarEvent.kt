@@ -8,3 +8,5 @@ sealed interface TopBarEvent
 data class NavigateEvent(val route: NavKey) : TopBarEvent
 
 data object AddTaskEvent : TopBarEvent
+
+data object FilterTaskEvent : TopBarEvent
