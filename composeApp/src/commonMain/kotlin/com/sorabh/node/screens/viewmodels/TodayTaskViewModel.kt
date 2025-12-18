@@ -39,6 +39,31 @@ class TodayTaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
     val showDateRangePickerState = mutableStateOf(false)
 
+    val isAnyFilterApplied: Boolean
+        get() {
+            val isStatusFilter = selectedStatus.isNotEmpty()
+            val isPriorityFilter = selectedPriority.isNotEmpty()
+            val isCategoryFilter = selectedCategory.isNotEmpty()
+
+            val isDateFilter = when (selectedDataRange.value) {
+                null -> false
+                TaskDateRange.CUSTOM_RANGE -> {
+                    val today = currentLocalDateTime().date
+                    val defaultStart = LocalDateTime(today, LocalTime(0, 0, 0))
+                    val defaultEnd = LocalDateTime(today.plus(DatePeriod(days = 1)), LocalTime(0, 0, 0))
+
+                    startOfDay.value != defaultStart ||
+                            startOfNextDay.value != defaultEnd
+                }
+                else -> true
+            }
+
+            return isStatusFilter ||
+                    isPriorityFilter ||
+                    isCategoryFilter ||
+                    isDateFilter
+        }
+
     init {
         getTodayTasks()
     }
@@ -80,6 +105,30 @@ class TodayTaskViewModel(private val repository: TaskRepository) : ViewModel() {
                 LocalDateTime(pair.second!!.toLocalDate(), LocalTime(23, 59, 59, 999_999_999))
         }
     }
+
+    fun resetFilters() {
+        // Clear multi-select filters
+        selectedStatus.clear()
+        selectedPriority.clear()
+        selectedCategory.clear()
+
+        // Reset date range selection
+        selectedDataRange.value = null
+
+        // Reset dates to today range
+        val today = currentLocalDateTime().date
+        val tomorrow = today.plus(DatePeriod(days = 1))
+
+        startOfDay.value = LocalDateTime(today, LocalTime(0, 0, 0))
+        startOfNextDay.value = LocalDateTime(tomorrow, LocalTime(0, 0, 0))
+
+        // Optional: close date picker
+        showDateRangePickerState.value = false
+
+        // Refresh task list
+        getTodayTasks()
+    }
+
 
     fun updateTask(task: TaskEntity) {
         viewModelScope.launch {

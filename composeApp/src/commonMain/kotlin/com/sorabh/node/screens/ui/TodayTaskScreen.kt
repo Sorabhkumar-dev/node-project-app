@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -17,8 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import com.sorabh.node.AppViewModel
 import com.sorabh.node.components.EmptyTaskState
 import com.sorabh.node.components.ShowDateRangePicker
@@ -45,6 +43,7 @@ fun TodayTaskScreen(
     onAppBarChanged: (AppBar) -> Unit,
     onNavigate: (NavKey) -> Unit,
 ) {
+    val viewModel = koinViewModel<TodayTaskViewModel>()
     val filterBottomSheet = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -58,22 +57,29 @@ fun TodayTaskScreen(
         }
     }
 
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+    LaunchedEffect(viewModel.isAnyFilterApplied) {
         onAppBarChanged(
             AppBar(
                 title = Res.string.today_task,
-                icon = Icons.Default.FilterAlt,
-                event = FilterTaskEvent
+                icon =  Icons.Outlined.FilterAlt,
+                event = FilterTaskEvent(viewModel.isAnyFilterApplied)
             )
         )
     }
-    TodayTaskContent(filterBottomSheet = filterBottomSheet, onNavigate = onNavigate)
+    TodayTaskContent(
+        viewModel = viewModel,
+        filterBottomSheet = filterBottomSheet,
+        onNavigate = onNavigate
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey) -> Unit) {
-    val viewModel = koinViewModel<TodayTaskViewModel>()
+private fun TodayTaskContent(
+    viewModel: TodayTaskViewModel,
+    filterBottomSheet: SheetState,
+    onNavigate: (NavKey) -> Unit
+) {
     val todayTasks = viewModel.todayTasks.collectAsState(emptyList()).value
 
     val coroutineScope = rememberCoroutineScope()
@@ -130,8 +136,12 @@ private fun TodayTaskContent(filterBottomSheet: SheetState, onNavigate: (NavKey)
                 onStatusChanged = viewModel::onStatusChanged,
                 onPriorityChanged = viewModel::onPriorityChanged,
                 onCategoryChanged = viewModel::onCategoryChanged,
+                clearFilter = {
+                    viewModel.resetFilters()
+                    hideFilterSheet()
+                },
                 onDateRangeClick = {
-                        viewModel.onTaskDateRangeChanged(it)
+                    viewModel.onTaskDateRangeChanged(it)
                     if (it == TaskDateRange.CUSTOM_RANGE)
                         viewModel.onDateRangePickerChanged(true)
                 }
