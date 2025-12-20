@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,6 +42,7 @@ import node.composeapp.generated.resources.category
 import node.composeapp.generated.resources.clear_filter
 import node.composeapp.generated.resources.filters
 import node.composeapp.generated.resources.priority
+import node.composeapp.generated.resources.repeating_task
 import node.composeapp.generated.resources.select_date_range
 import node.composeapp.generated.resources.show_task
 import node.composeapp.generated.resources.status
@@ -66,7 +69,7 @@ fun TaskFilterBottomSheet(
 @Composable
 fun TaskFilterSheet(
     modifier: Modifier,
-    onDismiss: () -> Unit,
+    isRepeatable: Boolean = false,
     startDate: String? = null,
     endDate: String? = null,
     selectedStatus: List<TaskStatus>,
@@ -77,6 +80,7 @@ fun TaskFilterSheet(
     onPriorityChanged: (TaskPriority) -> Unit,
     onCategoryChanged: (TaskCategory) -> Unit,
     onDateRangeClick: (TaskDateRange) -> Unit,
+    onRepeatableClick: (Boolean) -> Unit= {},
     clearFilter: () -> Unit,
     onShowTaskClick: () -> Unit
 ) {
@@ -237,6 +241,29 @@ fun TaskFilterSheet(
                 )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(imageVector = Icons.Default.Repeat, null)
+
+                    Text(
+                        text = stringResource(Res.string.repeating_task),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Switch(
+                    checked = isRepeatable,
+                    onCheckedChange = onRepeatableClick
+                )
+            }
 
             Spacer(modifier = Modifier.height(70.dp))
 

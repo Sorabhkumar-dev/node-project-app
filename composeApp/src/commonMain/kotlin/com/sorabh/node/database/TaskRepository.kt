@@ -28,7 +28,8 @@ interface TaskRepository {
         priorities: List<TaskPriority>,
 
         startDateTime: LocalDateTime?,
-        endDateTime: LocalDateTime?
+        endDateTime: LocalDateTime?,
+        isRepeatable: Boolean = false
     ): Flow<List<TaskEntity>>
 }
 
@@ -56,7 +57,9 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         priorities: List<TaskPriority>,
 
         startDateTime: LocalDateTime?,
-        endDateTime: LocalDateTime?
+        endDateTime: LocalDateTime?,
+
+        isRepeatable: Boolean
     ): Flow<List<TaskEntity>> = taskDao.getFilteredTasks(
         filterStatus,
         statuses,
@@ -65,6 +68,7 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         filterPriority,
         priorities,
         startDateTime,
-        endDateTime
+        endDateTime,
+        isRepeatable
     )
 }

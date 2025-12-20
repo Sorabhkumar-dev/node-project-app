@@ -53,6 +53,7 @@ interface TaskDao {
     @Query("""
     SELECT * FROM TaskEntity
     WHERE markAsDelete = 0
+    AND isRepeatable =:isRepeatable
     AND (:filterStatus = 0 OR taskStatus IN (:statuses))
     AND (:filterType = 0 OR taskCategory IN (:types))
     AND (:filterPriority = 0 OR priority IN (:priorities))
@@ -71,6 +72,7 @@ interface TaskDao {
         priorities: List<TaskPriority>,
 
         startDateTime: LocalDateTime?,
-        endDateTime: LocalDateTime?
+        endDateTime: LocalDateTime?,
+        isRepeatable: Boolean
     ): Flow<List<TaskEntity>>
 }

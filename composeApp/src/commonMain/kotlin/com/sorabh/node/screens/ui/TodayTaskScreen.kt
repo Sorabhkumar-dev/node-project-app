@@ -126,7 +126,6 @@ private fun TodayTaskContent(
         ) {
             TaskFilterSheet(
                 modifier = Modifier.fillMaxWidth(),
-                onDismiss = { hideFilterSheet() },
                 startDate = viewModel.startOfDay.value.standardFormat(),
                 endDate = viewModel.startOfNextDay.value.standardFormat(),
                 selectedStatus = viewModel.selectedStatus,
