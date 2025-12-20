@@ -1,11 +1,23 @@
 package com.sorabh.node.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
@@ -21,10 +33,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -172,6 +187,7 @@ fun OutlinedAddInput(
     maxLines: Int = 1,
     readOnly: Boolean = false,
     imageVector: ImageVector? = null,
+    trailingIcon: ImageVector? = null,
     onIconBtnClick: () -> Unit = {},
     text: String,
     onValueChange: (String) -> Unit = {}
@@ -192,6 +208,13 @@ fun OutlinedAddInput(
         },
         leadingIcon = {
             imageVector?.let {
+                IconButton(onClick = onIconBtnClick) {
+                    Icon(imageVector = it, null, tint = MaterialTheme.colorScheme.primary)
+                }
+            }
+        },
+        trailingIcon = {
+            trailingIcon?.let {
                 IconButton(onClick = onIconBtnClick) {
                     Icon(imageVector = it, null, tint = MaterialTheme.colorScheme.primary)
                 }
@@ -225,9 +248,7 @@ fun <T> OutlinedDropdown(
             readOnly = true,
             label = { label?.let { Text(text = label) } },
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
+                Icon(imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown, null)
             },
             modifier = Modifier
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable) // Critical: links the text field to the menu
@@ -256,3 +277,85 @@ fun <T> OutlinedDropdown(
         }
     }
 }
+
+@Stable
+@Composable
+fun <T> DropdownCard(
+    modifier: Modifier = Modifier,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    selectedItem: T?,
+    items: List<T>,
+    onItemSelected: (T) -> Unit,
+    label: @Composable (T) -> Unit,
+    leadingIcon: (@Composable (T) -> Unit)? = null,
+    cardColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
+) {
+    ElevatedCard(
+        modifier = modifier,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = cardColor,
+            contentColor = contentColor
+        )
+    ) {
+        Column {
+
+            // ---------- HEADER ----------
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        onExpandedChange(!expanded)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    selectedItem?.let {
+                        leadingIcon?.invoke(it)
+                        Spacer(Modifier.width(8.dp))
+                        label(it)
+                    }
+                }
+
+                Icon(
+                    imageVector = if (expanded)
+                        Icons.Default.KeyboardArrowUp
+                    else
+                        Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+
+            // ---------- CONTENT ----------
+            AnimatedVisibility(
+                visible = expanded,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                Column {
+                    items.fastForEach { item ->
+                        DropdownMenuItem(
+                            text = { label(item) },
+                            leadingIcon = {
+                                leadingIcon?.invoke(item)
+                            },
+                            onClick = {
+                                onItemSelected(item)
+                                onExpandedChange(false)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

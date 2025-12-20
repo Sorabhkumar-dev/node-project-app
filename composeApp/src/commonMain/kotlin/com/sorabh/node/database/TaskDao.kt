@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskStatus
@@ -50,19 +51,21 @@ interface TaskDao {
     @Query("SELECT * FROM TaskEntity  WHERE markAsDelete = 0 ORDER BY dateTime DESC")
     fun getAllTasks(): Flow<List<TaskEntity>>
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM TaskEntity
     WHERE markAsDelete = 0
-    AND isRepeatable =:isRepeatable
+    AND (:isRepeatable IS NULL OR isRepeatable = :isRepeatable)
     AND (:filterStatus = 0 OR taskStatus IN (:statuses))
     AND (:filterType = 0 OR taskCategory IN (:types))
     AND (:filterPriority = 0 OR priority IN (:priorities))
     AND (:startDateTime IS NULL OR dateTime >= :startDateTime)
     AND (:endDateTime IS NULL OR dateTime <= :endDateTime)
     ORDER BY dateTime DESC
-""")
+    """
+    )
     fun getFilteredTasks(
-        filterStatus: Boolean,
+        filterStatus: Boolean?,
         statuses: List<TaskStatus>,
 
         filterType: Boolean,
@@ -73,6 +76,38 @@ interface TaskDao {
 
         startDateTime: LocalDateTime?,
         endDateTime: LocalDateTime?,
-        isRepeatable: Boolean
+        isRepeatable: Boolean?
     ): Flow<List<TaskEntity>>
+
+    @Query(
+        """
+        UPDATE TaskEntity SET
+            title = COALESCE(:title, title),
+            description = COALESCE(:description, description),
+            isRepeatable = COALESCE(:isRepeatable, isRepeatable),
+            isSynced = COALESCE(:isSynced, isSynced),
+            markAsDelete = COALESCE(:markAsDelete, markAsDelete),
+            repeatType = COALESCE(:repeatType, repeatType),
+            priority = COALESCE(:priority, priority),
+            taskStatus = COALESCE(:taskStatus, taskStatus),
+            taskCategory = COALESCE(:taskCategory, taskCategory),
+            dateTime = COALESCE(:dateTime, dateTime),
+            updatedAt = :updatedAt
+        WHERE id = :taskId
+        """
+    )
+    suspend fun updateTaskPartial(
+        taskId: Long,
+        title: String?,
+        description: String?,
+        isRepeatable: Boolean?,
+        isSynced: Boolean?,
+        markAsDelete: Boolean?,
+        repeatType: RepeatType?,
+        priority: TaskPriority?,
+        taskStatus: TaskStatus?,
+        taskCategory: TaskCategory?,
+        dateTime: LocalDateTime?,
+        updatedAt: LocalDateTime = currentLocalDateTime()
+    ): Int
 }

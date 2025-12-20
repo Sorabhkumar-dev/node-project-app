@@ -1,6 +1,5 @@
 package com.sorabh.node.screens.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Watch
 import androidx.compose.material3.Button
@@ -45,16 +44,14 @@ import com.sorabh.node.components.TaskAddedDialog
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.AddTaskViewModel
 import com.sorabh.node.utils.AddTaskEvent
-import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
-import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskCategory
+import com.sorabh.node.utils.TaskPriority
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.add_new_task
 import node.composeapp.generated.resources.add_task
 import node.composeapp.generated.resources.description
-import node.composeapp.generated.resources.repeat
 import node.composeapp.generated.resources.repeating_task
 import node.composeapp.generated.resources.title
 import org.jetbrains.compose.resources.stringResource
@@ -146,6 +143,7 @@ private fun AddTaskContent(
                 OutlinedAddInput(
                     modifier = Modifier.weight(0.46f),
                     imageVector = Icons.Default.CalendarMonth,
+                    trailingIcon = Icons.Default.KeyboardArrowDown,
                     onIconBtnClick = {
                         viewModel.onDatePickerStateChanged(true)
                     },
@@ -157,6 +155,7 @@ private fun AddTaskContent(
                 OutlinedAddInput(
                     modifier = Modifier.weight(0.46f),
                     imageVector = Icons.Default.Watch,
+                    trailingIcon = Icons.Default.KeyboardArrowDown,
                     onIconBtnClick = {
                         viewModel.onTimePickerStateChanged(true)
                     },
@@ -229,25 +228,6 @@ private fun AddTaskContent(
                     checked = viewModel.isTaskRepeatable.value,
                     onCheckedChange = viewModel::onTaskRepeatableChanged
                 )
-            }
-
-
-            AnimatedVisibility(viewModel.isTaskRepeatable.value) {
-                Column {
-                    Text(
-                        text = stringResource(resource = Res.string.repeat),
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Spacer(modifier = Modifier.height(2.dp))
-
-                    OutlinedDropdown(
-                        items = RepeatType.entries.toList(),
-                        itemLabel = { it.value },
-                        selectedItem = viewModel.selectRepeatType.value,
-                        onItemSelected = viewModel::onRepeatTypeSelected
-                    )
-                }
             }
         }
 
