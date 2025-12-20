@@ -22,7 +22,7 @@ data object TodayTaskNav : NavKey, BottomBar
 data object RepeatTaskNav : NavKey, BottomBar
 
 @Serializable
-data class AddTaskNav(val priority: TaskPriority = TaskPriority.MEDIUM,val isRepeatable: Boolean = false) : NavKey, BottomBarHider
+data class AddTaskNav(val taskId: Long? = null,val priority: TaskPriority = TaskPriority.MEDIUM, val isRepeatable: Boolean = false) : NavKey, BottomBarHider
 
 @Serializable
 data object ImportantTaskNav : NavKey, BottomBar

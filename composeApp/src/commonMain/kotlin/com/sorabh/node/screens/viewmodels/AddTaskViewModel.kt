@@ -14,9 +14,12 @@ import com.sorabh.node.utils.ShowSnackBarEvent
 import com.sorabh.node.utils.SnackBarEvent
 import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskCategory
+import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -30,7 +33,10 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class AddTaskViewModel(private val taskRepository: TaskRepository, navData: AddTaskNav) : ViewModel() {
+class AddTaskViewModel(private val taskRepository: TaskRepository,private val navData: AddTaskNav) : ViewModel() {
+    private val _taskDetail = MutableStateFlow<TaskEntity?>(null)
+    val taskDetail = _taskDetail.asStateFlow()
+
     val taskTitle = mutableStateOf(TextFieldValue(""))
     val taskDescription = mutableStateOf(TextFieldValue(""))
 
@@ -74,10 +80,26 @@ class AddTaskViewModel(private val taskRepository: TaskRepository, navData: AddT
 
     val taskDialogVisibility = mutableStateOf(false)
 
+    val selectedRepeatType = mutableStateOf(RepeatType.DAILY)
+    val repeatDropDownExpand = mutableStateOf(false)
+
+    val selectedStatus = mutableStateOf(TaskStatus.TODO)
+    val statusDropDownExpand = mutableStateOf(false)
+
+    val selectedPriority = mutableStateOf(TaskPriority.MEDIUM)
+    val priorityDropDownExpand = mutableStateOf(false)
+
+    val selectedCategory = mutableStateOf(TaskCategory.OTHER)
+    val categoryDropDownExpand = mutableStateOf(false)
+
+
+    init {
+        navData.taskId?.let { getTaskDetail(it) }
+    }
+
     fun onTaskTitleChanged(title: TextFieldValue) {
         taskTitle.value = title
     }
-
 
     fun onTaskDescriptionChanged(description: TextFieldValue) {
         taskDescription.value = description
@@ -103,24 +125,113 @@ class AddTaskViewModel(private val taskRepository: TaskRepository, navData: AddT
         isShowTimePicker.value = isShow
     }
 
-    fun onTaskPrioritySelected(priority: TaskPriority) {
-        selectTaskPriority.value = priority
-    }
-
-    fun onTaskCategorySelected(taskCategory: TaskCategory) {
-        selectedTaskCategory.value = taskCategory
-    }
-
     fun onTaskRepeatableChanged(isRepeatable: Boolean) {
         isTaskRepeatable.value = isRepeatable
     }
 
-    fun onRepeatTypeSelected(repeatType: RepeatType) {
-        selectRepeatType.value = repeatType
-    }
-
     fun onTaskDialogVisible(isVisible: Boolean = false) {
         taskDialogVisibility.value = isVisible
+    }
+
+    fun getTaskDetail(id: Long) {
+        viewModelScope.launch {
+            taskRepository.getTask(id).collect {
+                _taskDetail.value = it
+            }
+        }
+    }
+
+    fun onRepeatTypeChanged(
+        isRepeatable: Boolean,
+        repeatType: RepeatType = RepeatType.DAILY
+    ) {
+        navData.taskId?.let {
+            updateTaskPartial(it, isRepeatable = isRepeatable, repeatType = repeatType)
+        }
+    }
+
+    fun onStatusSelected(status: TaskStatus) {
+        selectedStatus.value = status
+    }
+
+    fun onStatusChanged(status: TaskStatus) {
+        navData.taskId?.let {
+            updateTaskPartial(it, taskStatus = status)
+        }
+    }
+
+    fun onStausDropDownExpanded(expanded: Boolean) {
+        statusDropDownExpand.value = expanded
+    }
+
+    fun onCategorySelected(category: TaskCategory) {
+        selectedCategory.value = category
+    }
+
+    fun onCategoryChanged( category: TaskCategory) {
+        navData.taskId?.let {
+            updateTaskPartial(it, taskCategory = category)
+        }
+    }
+
+    fun onPrioritySelected(priority: TaskPriority) {
+        selectedPriority.value = priority
+    }
+
+    fun onPriorityChanged( priority: TaskPriority) {
+        navData.taskId?.let {
+            updateTaskPartial(it, priority = priority)
+        }
+    }
+
+    fun onPriorityDropDownExpanded(expanded: Boolean) {
+        priorityDropDownExpand.value = expanded
+    }
+
+    fun onCategoryDropDownExpanded(expanded: Boolean) {
+        categoryDropDownExpand.value = expanded
+    }
+
+    fun onRepeatSelected(repeat: RepeatType) {
+        selectedRepeatType.value = repeat
+    }
+
+    fun onRepeatDropDownExpanded(expanded: Boolean) {
+        repeatDropDownExpand.value = expanded
+    }
+
+
+    fun updateTaskPartial(
+        taskId: Long,
+        title: String? = null,
+        description: String? = null,
+        isRepeatable: Boolean? = null,
+        isSynced: Boolean? = null,
+        markAsDelete: Boolean? = null,
+        repeatType: RepeatType? = null,
+        priority: TaskPriority? = null,
+        taskStatus: TaskStatus? = null,
+        taskCategory: TaskCategory? = null,
+        dateTime: LocalDateTime? = null,
+        updatedAt: LocalDateTime = currentLocalDateTime()
+    ) {
+        viewModelScope.launch {
+            taskRepository.updateTaskPartial(
+                taskId,
+                title,
+                description,
+                isRepeatable = isRepeatable,
+                isSynced,
+                markAsDelete,
+                repeatType,
+                priority,
+                taskStatus,
+                taskCategory,
+                dateTime,
+                updatedAt
+            )
+
+        }
     }
 
     fun saveTask(sendSnackBarEvent: (SnackBarEvent) -> Unit) {

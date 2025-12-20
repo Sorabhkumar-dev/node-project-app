@@ -7,6 +7,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +39,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -139,7 +142,7 @@ fun TaskCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StatusBadge(
-                    text=task.taskStatus.name,
+                    text = task.taskStatus.name,
                     containerColor = task.taskStatus.color.container,
                     color = task.taskStatus.color
                 )
@@ -394,6 +397,48 @@ fun SwipeBackground(dismissState: SwipeToDismissBoxState) {
                     .scale(scale)
                     .size(36.dp)
             )
+        }
+    }
+}
+
+
+@Stable
+@Composable
+fun ElevatedCardItem(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    label: String,
+    leadingIcon: ImageVector,
+    trailing:  ImageVector,
+    cardColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface
+) {
+    ElevatedCard(
+        modifier = modifier,
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = cardColor,
+            contentColor = contentColor
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) { onClick() }
+                .padding(horizontal = 16.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(imageVector = leadingIcon,null)
+                Spacer(Modifier.width(8.dp))
+                Text(text = label)
+            }
+
+            Icon(imageVector = trailing,null,modifier = Modifier.size(30.dp))
         }
     }
 }

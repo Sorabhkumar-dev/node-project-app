@@ -93,7 +93,7 @@ private fun ImportantTaskContent(viewModel: ImportantTaskViewModel, filterBottom
 
     if (todayTasks.isEmpty())
         EmptyTaskState(image = Res.drawable.empty_task) {
-            onNavigate(AddTaskNav(TaskPriority.HIGH))
+            onNavigate(AddTaskNav(priority = TaskPriority.HIGH))
         }
     else
         LazyColumn(
