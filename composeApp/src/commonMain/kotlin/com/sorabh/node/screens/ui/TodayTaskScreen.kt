@@ -44,7 +44,7 @@ fun TodayTaskScreen(
     onNavigate: (NavKey) -> Unit,
 ) {
     val viewModel = koinViewModel<TodayTaskViewModel>()
-    val filterBottomSheet = rememberModalBottomSheetState()
+    val filterBottomSheet = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {

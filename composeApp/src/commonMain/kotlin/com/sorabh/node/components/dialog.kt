@@ -54,6 +54,7 @@ import node.composeapp.generated.resources.cancel
 import node.composeapp.generated.resources.okay
 import node.composeapp.generated.resources.select_date_range
 import node.composeapp.generated.resources.select_time
+import node.composeapp.generated.resources.status
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -91,14 +92,9 @@ fun ShowDateRangePicker(
     ) {
         DateRangePicker(
             state = dateRangePickerState,
-            title = {
-                Text(text = stringResource(Res.string.select_date_range))
-            },
-            showModeToggle = false,
+            showModeToggle = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
-                .padding(16.dp)
         )
     }
 }

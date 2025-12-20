@@ -92,10 +92,15 @@ fun TaskFilterSheet(
                 fontWeight = FontWeight.SemiBold
             )
 
-            IconButton(onClick = onDismiss) {
-                Icon(imageVector = Icons.Filled.Close, null)
+            OutlinedButton(
+                onClick = clearFilter,
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(text = stringResource(Res.string.clear_filter))
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         HorizontalDivider()
 
@@ -248,15 +253,6 @@ fun TaskFilterSheet(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedButton(
-                onClick = clearFilter,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                shape = MaterialTheme.shapes.small
-            ) {
-                Text(text = stringResource(Res.string.clear_filter))
-            }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
