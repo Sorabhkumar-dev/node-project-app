@@ -148,7 +148,8 @@ class ImportantTaskViewModel(private val repository: TaskRepository) : ViewModel
                 startDateTime = if (selectedDataRange.value == TaskDateRange.CUSTOM_RANGE) startOfDay.value else dateRange?.start
                     ?: startOfDay.value,
                 endDateTime = if (selectedDataRange.value == TaskDateRange.CUSTOM_RANGE) startOfNextDay.value else dateRange?.end
-                    ?: startOfNextDay.value
+                    ?: startOfNextDay.value,
+                isRepeatable = true
             ).collect {
                 _importantTasks.value = it
             }

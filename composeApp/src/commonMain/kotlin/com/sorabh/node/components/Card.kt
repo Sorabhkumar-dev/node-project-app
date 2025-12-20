@@ -61,8 +61,8 @@ import androidx.compose.ui.unit.sp
 import com.sorabh.node.database.TaskEntity
 import com.sorabh.node.nav.TaskDetailNav
 import com.sorabh.node.utils.RepeatType
-import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.TaskCategory
+import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.color
 import com.sorabh.node.utils.container
 import com.sorabh.node.utils.currentLocalDateTime

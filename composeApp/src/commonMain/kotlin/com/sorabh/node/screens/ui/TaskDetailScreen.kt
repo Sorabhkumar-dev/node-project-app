@@ -14,14 +14,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.ElevatedFilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,17 +38,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.sorabh.node.components.StatusBadge
+import com.sorabh.node.components.DropdownCard
 import com.sorabh.node.pojo.AppBar
 import com.sorabh.node.screens.viewmodels.TaskDetailViewModel
+import com.sorabh.node.utils.RepeatType
+import com.sorabh.node.utils.TaskCategory
+import com.sorabh.node.utils.TaskPriority
+import com.sorabh.node.utils.TaskStatus
 import com.sorabh.node.utils.color
-import com.sorabh.node.utils.container
 import com.sorabh.node.utils.formatTaskDate2
 import com.sorabh.node.utils.icon
-import com.sorabh.node.utils.main
 import node.composeapp.generated.resources.Res
+import node.composeapp.generated.resources.description
+import node.composeapp.generated.resources.repeating_task
 import node.composeapp.generated.resources.task_detail
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TaskDetailScreen(viewModel: TaskDetailViewModel, sendTopBarEvent: (AppBar) -> Unit) {
@@ -123,28 +129,15 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                     animationSpec = tween(durationMillis = 1000)
                 )
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        "Description",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    StatusBadge(
-                        text = taskDetail?.priority?.name ?: "",
-                        textStyle = MaterialTheme.typography.labelLarge,
-                        taskDetail?.priority?.color?.container
-                            ?: MaterialTheme.colorScheme.background,
-                        color = taskDetail?.priority?.color
-                            ?: MaterialTheme.colorScheme.onBackground
-                    )
-                }
+                Text(
+                    text = stringResource(Res.string.description),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             HorizontalDivider()
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -165,81 +158,170 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            AnimatedVisibility(
-                visible = isVisible,
-                enter = slideInVertically(
-                    initialOffsetY = { fullHeight -> fullHeight },
-                    animationSpec = tween(durationMillis = 2000)
-                )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    taskDetail?.taskStatus?.let {
-                        ElevatedFilterChip(
-                            onClick = {},
-                            shape = MaterialTheme.shapes.medium,
-                            colors = FilterChipDefaults.elevatedFilterChipColors(
-                                labelColor = taskDetail.taskStatus.color,
-                                iconColor = taskDetail.taskStatus.color
-                            ),
-                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
+                    Icon(imageVector = Icons.Default.Repeat, null)
+
+                    Text(
+                        text = stringResource(Res.string.repeating_task),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Switch(
+                    checked = (taskDetail?.isRepeatable ?: false || viewModel.isTaskRepeatable.value),
+                    onCheckedChange = {
+                        viewModel.onTaskRepeatableChanged(it)
+                        viewModel.onRepeatTypeChanged(taskDetail?.id!!, it)
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Column {
+                        if (taskDetail?.isRepeatable ?: false || viewModel.isTaskRepeatable.value) {
+                            DropdownCard(
+                                expanded = viewModel.repeatDropDownExpand.value,
+                                onExpandedChange = viewModel::onRepeatDropDownExpanded,
+                                selectedItem = viewModel.selectedRepeatType.value
+                                    ?: taskDetail?.repeatType,
+                                items = RepeatType.entries,
+                                label = {
+                                    Text(text = it.value)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = it.icon,
+                                        contentDescription = null
+                                    )
+                                },
+                                onItemSelected = {
+                                    viewModel.onRepeatSelected(it)
+                                    viewModel.onRepeatTypeChanged(taskDetail?.id!!, true, it)
+                                }
+                            )
+
+
+                        } else {
+                            DropdownCard(
+                                expanded = viewModel.priorityDropDownExpand.value,
+                                onExpandedChange = viewModel::onPriorityDropDownExpanded,
+                                selectedItem = viewModel.selectedPriority.value
+                                    ?: taskDetail?.priority,
+                                items = TaskPriority.entries,
+                                label = {
+                                    Text(text = it.name, color = it.color)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = it.icon,
+                                        contentDescription = null,
+                                        tint = it.color
+                                    )
+                                },
+                                onItemSelected = {
+                                    viewModel.onPrioritySelected(it)
+                                    viewModel.onPriorityChanged(taskId = taskDetail?.id!!, it)
+                                }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+
+                        DropdownCard(
+                            expanded = viewModel.statusDropDownExpand.value,
+                            onExpandedChange = viewModel::onStausDropDownExpanded,
+                            selectedItem = viewModel.selectedStatus.value
+                                ?: taskDetail?.taskStatus,
+                            items = TaskStatus.entries,
                             label = {
-                                Text(text = it.name)
+                                Text(text = it.name, color = it.color)
                             },
                             leadingIcon = {
                                 Icon(
                                     imageVector = it.icon,
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    tint = it.color
                                 )
                             },
-                            selected = false
+                            onItemSelected = {
+                                viewModel.onStatusSelected(it)
+                                viewModel.onStatusChanged(taskDetail?.id!!, it)
+                            }
                         )
                     }
+                }
 
-                    taskDetail?.taskCategory?.let {
-                        ElevatedFilterChip(
-                            onClick = {},
-                            shape = MaterialTheme.shapes.medium,
-                            colors = FilterChipDefaults.elevatedFilterChipColors(
-                                labelColor = it.color,
-                                iconColor = it.color
-                            ),
-                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
-                            label = { Text(text = it.name) },
+                item {
+                    Column {
+                        if ((taskDetail?.isRepeatable ?: false || viewModel.isTaskRepeatable.value)) {
+                            DropdownCard(
+                                expanded = viewModel.priorityDropDownExpand.value,
+                                onExpandedChange = viewModel::onPriorityDropDownExpanded,
+                                selectedItem = viewModel.selectedPriority.value
+                                    ?: taskDetail?.priority,
+                                items = TaskPriority.entries,
+                                label = {
+                                    Text(text = it.name, color = it.color)
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = it.icon,
+                                        contentDescription = null,
+                                        tint = it.color
+                                    )
+                                },
+                                onItemSelected = {
+                                    viewModel.onPrioritySelected(it)
+                                    viewModel.onPriorityChanged(taskId = taskDetail?.id!!, it)
+                                }
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+
+                        DropdownCard(
+                            expanded = viewModel.categoryDropDownExpand.value,
+                            onExpandedChange = viewModel::onCategoryDropDownExpanded,
+                            selectedItem = viewModel.selectedCategory.value
+                                ?: taskDetail?.taskCategory,
+                            items = TaskCategory.entries,
+                            label = {
+                                Text(text = it.name, color = it.color)
+                            },
                             leadingIcon = {
                                 Icon(
                                     painter = painterResource(it.icon),
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    tint = it.color
                                 )
                             },
-                            selected = false
+                            onItemSelected = {
+                                viewModel.onCategorySelected(it)
+                                viewModel.onCategoryChanged(taskId = taskDetail?.id!!, it)
+                            }
                         )
                     }
+                }
 
-                    if (taskDetail?.isRepeatable == true)
-                        ElevatedFilterChip(
-                            onClick = {},
-                            shape = MaterialTheme.shapes.medium,
-                            colors = FilterChipDefaults.elevatedFilterChipColors(
-                                labelColor = MaterialTheme.colorScheme.primary.main,
-                                iconColor = MaterialTheme.colorScheme.primary.main
-                            ),
-                            elevation = FilterChipDefaults.elevatedFilterChipElevation(8.dp),
-                            label = {
-                                Text(
-                                    text = taskDetail.repeatType?.value ?: "",
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Repeat,
-                                    contentDescription = null
-                                )
-                            },
-                            selected = false
-                        )
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }

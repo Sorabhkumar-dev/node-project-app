@@ -1,8 +1,10 @@
 package com.sorabh.node.database
 
+import com.sorabh.node.utils.RepeatType
 import com.sorabh.node.utils.TaskCategory
 import com.sorabh.node.utils.TaskPriority
 import com.sorabh.node.utils.TaskStatus
+import com.sorabh.node.utils.currentLocalDateTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDateTime
 
@@ -29,8 +31,23 @@ interface TaskRepository {
 
         startDateTime: LocalDateTime?,
         endDateTime: LocalDateTime?,
-        isRepeatable: Boolean = false
+        isRepeatable: Boolean?
     ): Flow<List<TaskEntity>>
+
+    suspend fun updateTaskPartial(
+        taskId: Long,
+        title: String?,
+        description: String?,
+        isRepeatable: Boolean?,
+        isSynced: Boolean?,
+        markAsDelete: Boolean?,
+        repeatType: RepeatType?,
+        priority: TaskPriority?,
+        taskStatus: TaskStatus?,
+        taskCategory: TaskCategory?,
+        dateTime: LocalDateTime?,
+        updatedAt: LocalDateTime = currentLocalDateTime()
+    ): Int
 }
 
 class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
@@ -59,7 +76,7 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         startDateTime: LocalDateTime?,
         endDateTime: LocalDateTime?,
 
-        isRepeatable: Boolean
+        isRepeatable: Boolean?
     ): Flow<List<TaskEntity>> = taskDao.getFilteredTasks(
         filterStatus,
         statuses,
@@ -71,4 +88,33 @@ class TaskRepositoryImpl(private val taskDao: TaskDao) : TaskRepository {
         endDateTime,
         isRepeatable
     )
+
+    override suspend fun updateTaskPartial(
+        taskId: Long,
+        title: String?,
+        description: String?,
+        isRepeatable: Boolean?,
+        isSynced: Boolean?,
+        markAsDelete: Boolean?,
+        repeatType: RepeatType?,
+        priority: TaskPriority?,
+        taskStatus: TaskStatus?,
+        taskCategory: TaskCategory?,
+        dateTime: LocalDateTime?,
+        updatedAt: LocalDateTime
+    ): Int =
+        taskDao.updateTaskPartial(
+            taskId,
+            title,
+            description,
+            isRepeatable,
+            isSynced,
+            markAsDelete,
+            repeatType,
+            priority,
+            taskStatus,
+            taskCategory,
+            dateTime,
+            updatedAt
+        )
 }

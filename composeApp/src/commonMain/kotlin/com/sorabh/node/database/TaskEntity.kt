@@ -18,7 +18,7 @@ data class TaskEntity(
     val isRepeatable: Boolean = false,
     val isSynced: Boolean = false,
     val markAsDelete: Boolean = false,
-    val repeatType: RepeatType? = null,
+    val repeatType: RepeatType? = RepeatType.DAILY,
     val priority: TaskPriority = TaskPriority.LOW,
     val taskStatus: TaskStatus = TaskStatus.TODO,
     val taskCategory: TaskCategory = TaskCategory.OTHER,
