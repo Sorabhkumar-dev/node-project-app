@@ -1,6 +1,6 @@
 package com.sorabh.node.di
 
-import com.sorabh.node.datastore.NodePreference
+import com.sorabh.node.data.datastore.NodePreference
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

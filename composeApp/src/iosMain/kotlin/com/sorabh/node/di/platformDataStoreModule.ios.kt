@@ -2,7 +2,7 @@ package com.sorabh.node.di
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.sorabh.node.datastore.createDataStore
+import com.sorabh.node.data.datastore.createDataStore
 import org.koin.dsl.module
 
 actual val platformDataStoreModule = module {

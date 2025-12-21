@@ -1,8 +1,8 @@
 package com.sorabh.node.di
 
 import com.sorabh.node.AppDatabase
-import com.sorabh.node.database.TaskRepository
-import com.sorabh.node.database.TaskRepositoryImpl
+import com.sorabh.node.data.database.TaskRepository
+import com.sorabh.node.data.database.TaskRepositoryImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

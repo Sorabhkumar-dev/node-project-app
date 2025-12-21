@@ -19,7 +19,9 @@ navigation = "2.9.1"
 #cmpNavigation3 = "1.0.0-alpha06"
 
 datastore-preference = "1.2.0"
-kotlix-atomic = "0.23.2"
+kotlinx-coroutines = "1.10.2"
+
+ktor = "3.3.3"
 
 room = "2.8.4"
 sqlite = "2.6.2"
@@ -43,7 +45,6 @@ koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-view
 
 materila-icon-extend = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material_extend" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
-kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:kotlinx-atomicfu", version.ref = "kotlix-atomic" }
 
 datastore-preference-core = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preference" }
 
@@ -56,6 +57,16 @@ compose-nav3 = { module = "org.jetbrains.androidx.navigation:navigation-compose"
 #jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "cmpNavigation3" }
 #jetbrains-lifecycle-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "cmpNavigation3" }
 #jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle"}
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging",version.ref = "ktor"}
+ktor-serialization-kotlinx = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

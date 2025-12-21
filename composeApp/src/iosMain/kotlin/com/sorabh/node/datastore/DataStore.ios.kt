@@ -2,6 +2,8 @@ package com.sorabh.node.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.sorabh.node.data.datastore.DATA_STORE_FILE_NAME
+import com.sorabh.node.data.datastore.createDataStore
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
@@ -18,6 +20,6 @@ fun createDataStore(): DataStore<Preferences> {
             create = false,
             error = null,
         )
-        requireNotNull(documentDirectory).path + "/$DATA_STORE_FILE_NAME"
+        requireNotNull(documentDirectory).path + "/${DATA_STORE_FILE_NAME}"
     }
 }

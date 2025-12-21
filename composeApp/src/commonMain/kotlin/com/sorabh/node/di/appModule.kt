@@ -1,12 +1,12 @@
 package com.sorabh.node.di
 
-import com.sorabh.node.AppViewModel
-import com.sorabh.node.screens.viewmodels.AddTaskViewModel
-import com.sorabh.node.screens.viewmodels.AllTaskViewModel
-import com.sorabh.node.screens.viewmodels.ImportantTaskViewModel
-import com.sorabh.node.screens.viewmodels.RepeatTaskViewModel
-import com.sorabh.node.screens.viewmodels.TaskDetailViewModel
-import com.sorabh.node.screens.viewmodels.TodayTaskViewModel
+import com.sorabh.node.ui.viewmodels.AppViewModel
+import com.sorabh.node.ui.viewmodels.AddTaskViewModel
+import com.sorabh.node.ui.viewmodels.AllTaskViewModel
+import com.sorabh.node.ui.viewmodels.ImportantTaskViewModel
+import com.sorabh.node.ui.viewmodels.RepeatTaskViewModel
+import com.sorabh.node.ui.viewmodels.TaskDetailViewModel
+import com.sorabh.node.ui.viewmodels.TodayTaskViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

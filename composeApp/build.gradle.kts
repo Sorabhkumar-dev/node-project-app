@@ -32,6 +32,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+            implementation(libs.kotlinx.coroutines.android)
         }
         commonMain.dependencies {
 //            implementation(libs.compose.nav3)
@@ -46,7 +48,6 @@ kotlin {
 
             implementation(libs.materila.icon.extend)
             implementation(libs.kotlinx.datetime)
-//            implementation(libs.kotlinx.atomicfu)
 
             implementation(libs.datastore.preference.core)
             implementation(libs.androidx.room.runtime)
@@ -60,6 +61,15 @@ kotlin {
 //            implementation(libs.jetbrains.navigation3.ui)
 //            implementation(libs.jetbrains.lifecycle.viewmodel.nav3)
 //            implementation(libs.jetbrains.lifecycle.viewmodel)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.serialization.kotlinx)
+            implementation(libs.ktor.client.content.negotiation)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
