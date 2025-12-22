@@ -241,7 +241,7 @@ fun App() {
                     FloatingActionButton(onClick = {
                         navController.navigate(
                             AddTaskNav(
-                                priority = if (currentDestination.hasRoute<ImportantTaskNav>()) TaskPriority.HIGH else TaskPriority.MEDIUM,
+                                priority = if (currentDestination.hasRoute<ImportantTaskNav>()) TaskPriority.HIGH.ordinal else TaskPriority.MEDIUM.ordinal,
                                 isRepeatable = currentDestination.hasRoute<RepeatTaskNav>()
                             )
                         )

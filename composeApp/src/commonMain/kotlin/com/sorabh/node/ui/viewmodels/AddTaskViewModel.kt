@@ -237,11 +237,10 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
     fun saveTask(sendSnackBarEvent: (SnackBarEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val task = TaskEntity(
-                email = "sorabhkumar@gmail.com",
                 title = taskTitle.value.text,
                 description = taskDescription.value.text,
                 dateTime = LocalDateTime(taskDate.value, taskTime.value),
-                priority = selectTaskPriority.value,
+                priority = TaskPriority.entries[selectTaskPriority.value],
                 taskCategory = selectedTaskCategory.value,
                 isRepeatable = isTaskRepeatable.value,
                 repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,

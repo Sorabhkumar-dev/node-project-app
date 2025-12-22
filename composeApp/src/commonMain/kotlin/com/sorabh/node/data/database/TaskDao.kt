@@ -110,4 +110,19 @@ interface TaskDao {
         dateTime: LocalDateTime?,
         updatedAt: LocalDateTime = currentLocalDateTime()
     ): Int
+
+
+    // Local → Server
+    @Query("SELECT * FROM taskentity WHERE isSynced = 0")
+    suspend fun getUnsyncedTasks(): List<TaskEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertTasks(tasks: List<TaskEntity>)
+
+    @Query("UPDATE taskentity SET isSynced = 1 WHERE id IN (:ids)")
+    suspend fun markAsSynced(ids: List<Long>)
+
+    @Query("SELECT MAX(updatedAt) FROM taskentity")
+    suspend fun getLastUpdatedTime(): LocalDateTime?
+
 }

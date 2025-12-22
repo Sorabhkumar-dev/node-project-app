@@ -1,6 +1,8 @@
 package com.sorabh.node.ui.utils
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -67,6 +69,15 @@ fun Long.toLocalDate(
         .date
 }
 
+inline fun <reified T> safeKtorFlow(
+    crossinline block: suspend () -> T
+): Flow<T> = flow {
+    try {
+        emit(block())
+    } catch (e: Exception) {
+        throw e // or emit error wrapper if you prefer
+    }
+}
 
 val Color.main: Color get() = this.copy(0.7f)
 val Color.container: Color get() = this.copy(0.1f)

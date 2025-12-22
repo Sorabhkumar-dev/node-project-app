@@ -2,22 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "b4127b325b8f9bd8e9655a91b2896389",
+    "identityHash": "e14c5d60f47d69d1c16f8c353b54b8af",
     "entities": [
       {
         "tableName": "TaskEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `isRepeatable` INTEGER NOT NULL, `isSynced` INTEGER NOT NULL, `markAsDelete` INTEGER NOT NULL, `repeatType` TEXT, `priority` TEXT NOT NULL, `taskStatus` TEXT NOT NULL, `taskCategory` TEXT NOT NULL, `dateTime` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `isRepeatable` INTEGER NOT NULL, `isSynced` INTEGER NOT NULL, `markAsDelete` INTEGER NOT NULL, `repeatType` TEXT, `priority` TEXT NOT NULL, `taskStatus` TEXT NOT NULL, `taskCategory` TEXT NOT NULL, `dateTime` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "email",
-            "columnName": "email",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -102,7 +96,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b4127b325b8f9bd8e9655a91b2896389')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e14c5d60f47d69d1c16f8c353b54b8af')"
     ]
   }
 }

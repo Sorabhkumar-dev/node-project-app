@@ -1,19 +1,16 @@
-package com.sorabh.node.data.database
+package com.sorabh.node.data.remote.pojo.shared
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.sorabh.node.ui.utils.RepeatType
+import com.sorabh.node.ui.utils.TaskCategory
 import com.sorabh.node.ui.utils.TaskPriority
 import com.sorabh.node.ui.utils.TaskStatus
-import com.sorabh.node.ui.utils.TaskCategory
 import com.sorabh.node.ui.utils.currentLocalDateTime
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity
-data class TaskEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+data class TaskDTO(
+    val id: Long,
     val title: String,
     val description: String = "",
     val isRepeatable: Boolean = false,
