@@ -8,10 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FilterAlt
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,7 +17,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sorabh.node.ui.viewmodels.AppViewModel
 import com.sorabh.node.ui.components.EmptyTaskState
 import com.sorabh.node.ui.components.ShowDateRangePicker
 import com.sorabh.node.ui.components.SwipeableTaskCard
@@ -29,10 +26,11 @@ import com.sorabh.node.ui.components.TaskFilterSheet
 import com.sorabh.node.ui.nav.AddTaskNav
 import com.sorabh.node.ui.nav.NavKey
 import com.sorabh.node.ui.pojo.AppBar
-import com.sorabh.node.ui.viewmodels.TodayTaskViewModel
 import com.sorabh.node.ui.utils.FilterTaskEvent
 import com.sorabh.node.ui.utils.TaskDateRange
 import com.sorabh.node.ui.utils.standardFormat
+import com.sorabh.node.ui.viewmodels.AppViewModel
+import com.sorabh.node.ui.viewmodels.TodayTaskViewModel
 import kotlinx.coroutines.launch
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.today_task
@@ -99,11 +97,6 @@ private fun TodayTaskContent(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Button(onClick = viewModel::syncTasks){
-                    Text(text = "Sync Task")
-                }
-            }
 
             items(todayTasks, key = { it.id }) {
                 SwipeableTaskCard(

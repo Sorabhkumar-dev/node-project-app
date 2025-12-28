@@ -34,6 +34,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.work.runtime.ktx)
+            implementation(libs.koin.androidx.workmanager)
         }
         commonMain.dependencies {
 //            implementation(libs.compose.nav3)

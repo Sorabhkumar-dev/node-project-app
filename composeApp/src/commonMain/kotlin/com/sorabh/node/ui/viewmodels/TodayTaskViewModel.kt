@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sorabh.node.data.database.TaskEntity
 import com.sorabh.node.data.database.TaskRepository
-import com.sorabh.node.data.remote.ApiRepository
 import com.sorabh.node.ui.utils.TaskCategory
 import com.sorabh.node.ui.utils.TaskDateRange
 import com.sorabh.node.ui.utils.TaskPriority
@@ -22,7 +21,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.plus
 
-class TodayTaskViewModel(private val repository: TaskRepository,private val apiRepository: ApiRepository) : ViewModel() {
+class TodayTaskViewModel(private val repository: TaskRepository) : ViewModel() {
     private val todayDate = currentLocalDateTime().date
     var startOfDay = mutableStateOf(LocalDateTime(todayDate, LocalTime(0, 0, 0)))
 
@@ -163,12 +162,5 @@ class TodayTaskViewModel(private val repository: TaskRepository,private val apiR
             }
         }
     }
-
-   fun syncTasks() {
-       viewModelScope.launch {
-           apiRepository.syncTasks()
-       }
-   }
-
 
 }
