@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -115,8 +116,7 @@ private fun AddTaskContent(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().imePadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -222,7 +222,8 @@ private fun AddTaskContent(
                     DropdownCard(
                         expanded = viewModel.repeatDropDownExpand.value,
                         onExpandedChange = viewModel::onRepeatDropDownExpanded,
-                        selectedItem = taskDetail?.repeatType?.toRepeatType() ?: viewModel.selectedRepeatType.value,
+                        selectedItem = taskDetail?.repeatType?.toRepeatType()
+                            ?: viewModel.selectedRepeatType.value,
                         items = RepeatType.entries,
                         label = {
                             Text(text = it.value)
@@ -235,7 +236,7 @@ private fun AddTaskContent(
                         },
                         onItemSelected = {
                             viewModel.onRepeatSelected(it)
-                            viewModel.onRepeatTypeChanged( true, it)
+                            viewModel.onRepeatTypeChanged(true, it)
                         }
                     )
 
@@ -244,7 +245,8 @@ private fun AddTaskContent(
                     DropdownCard(
                         expanded = viewModel.priorityDropDownExpand.value,
                         onExpandedChange = viewModel::onPriorityDropDownExpanded,
-                        selectedItem = taskDetail?.priority?.toTaskPriority() ?:  viewModel.selectedPriority.value,
+                        selectedItem = taskDetail?.priority?.toTaskPriority()
+                            ?: viewModel.selectedPriority.value,
                         items = TaskPriority.entries,
                         label = {
                             Text(text = it.name, color = it.color)
@@ -258,7 +260,7 @@ private fun AddTaskContent(
                         },
                         onItemSelected = {
                             viewModel.onPrioritySelected(it)
-                            viewModel.onPriorityChanged( it)
+                            viewModel.onPriorityChanged(it)
                         }
                     )
                 }
@@ -269,7 +271,8 @@ private fun AddTaskContent(
                 DropdownCard(
                     expanded = viewModel.statusDropDownExpand.value,
                     onExpandedChange = viewModel::onStausDropDownExpanded,
-                    selectedItem = taskDetail?.taskStatus?.toTaskStatus() ?: viewModel.selectedStatus.value,
+                    selectedItem = taskDetail?.taskStatus?.toTaskStatus()
+                        ?: viewModel.selectedStatus.value,
                     items = TaskStatus.entries,
                     label = {
                         Text(text = it.name, color = it.color)
@@ -283,7 +286,7 @@ private fun AddTaskContent(
                     },
                     onItemSelected = {
                         viewModel.onStatusSelected(it)
-                        viewModel.onStatusChanged( it)
+                        viewModel.onStatusChanged(it)
                     }
                 )
             }
@@ -295,7 +298,8 @@ private fun AddTaskContent(
                     DropdownCard(
                         expanded = viewModel.priorityDropDownExpand.value,
                         onExpandedChange = viewModel::onPriorityDropDownExpanded,
-                        selectedItem = taskDetail?.priority?.toTaskPriority() ?: viewModel.selectedPriority.value,
+                        selectedItem = taskDetail?.priority?.toTaskPriority()
+                            ?: viewModel.selectedPriority.value,
                         items = TaskPriority.entries,
                         label = {
                             Text(text = it.name, color = it.color)
@@ -309,7 +313,7 @@ private fun AddTaskContent(
                         },
                         onItemSelected = {
                             viewModel.onPrioritySelected(it)
-                            viewModel.onPriorityChanged( it)
+                            viewModel.onPriorityChanged(it)
                         }
                     )
 
@@ -319,7 +323,8 @@ private fun AddTaskContent(
                 DropdownCard(
                     expanded = viewModel.categoryDropDownExpand.value,
                     onExpandedChange = viewModel::onCategoryDropDownExpanded,
-                    selectedItem = taskDetail?.taskCategory?.toTaskCategory() ?: viewModel.selectedCategory.value,
+                    selectedItem = taskDetail?.taskCategory?.toTaskCategory()
+                        ?: viewModel.selectedCategory.value,
                     items = TaskCategory.entries,
                     label = {
                         Text(text = it.name, color = it.color)
@@ -333,17 +338,17 @@ private fun AddTaskContent(
                     },
                     onItemSelected = {
                         viewModel.onCategorySelected(it)
-                        viewModel.onCategoryChanged( it)
+                        viewModel.onCategoryChanged(it)
                     }
                 )
             }
         }
 
-        item (span = { GridItemSpan(2)}){
+        item(span = { GridItemSpan(2) }) {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        item (span = { GridItemSpan(2)}){
+        item(span = { GridItemSpan(2) }) {
             Button(
                 onClick = {
                     if (viewModel.taskTitle.value.text.isBlank())
