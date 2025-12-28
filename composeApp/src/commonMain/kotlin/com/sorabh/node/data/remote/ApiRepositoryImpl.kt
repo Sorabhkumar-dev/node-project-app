@@ -10,7 +10,7 @@ class ApiRepositoryImpl(
     private val taskDao: TaskDao,
     private val apiService: ApiService
 ) : ApiRepository {
-    override suspend fun syncTasks(request: SyncRequest): Boolean{
+    override suspend fun syncTasks(): Boolean{
        return try {
             val localUnsynced = taskDao.getUnsyncedTasks()
             val lastLocalUpdate = taskDao.getLastUpdatedTime() ?: LocalDateTime.parse("1970-01-01T00:00:00")
@@ -21,6 +21,8 @@ class ApiRepositoryImpl(
                     clientTasks = localUnsynced.map { it.toTaskDTO() }
                 )
             )
+
+           print(response)
 
 
             // 1️⃣ Resolve conflicts (Last Update Wins)

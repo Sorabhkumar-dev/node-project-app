@@ -2,6 +2,7 @@ package com.sorabh.node.data.remote.pojo
 
 import com.sorabh.node.data.database.TaskEntity
 import com.sorabh.node.data.remote.pojo.shared.TaskDTO
+import com.sorabh.node.ui.utils.RepeatType
 
 fun TaskDTO.toTaskEntity() =
     TaskEntity(
@@ -27,7 +28,7 @@ fun TaskEntity.toTaskDTO() =
         isRepeatable = isRepeatable,
         isSynced = isSynced,
         markAsDelete = markAsDelete,
-        repeatType = repeatType,
+        repeatType = repeatType ?: RepeatType.DAILY.name,
         priority = priority,
         taskStatus = taskStatus,
         taskCategory = taskCategory,

@@ -38,3 +38,13 @@ enum class RepeatType(
         icon = Icons.Outlined.Event
     )
 }
+
+fun String.toRepeatType(): RepeatType = when (this) {
+    RepeatType.DAILY.name -> RepeatType.DAILY
+    RepeatType.WEEKLY.name -> RepeatType.WEEKLY
+    RepeatType.BI_WEEKLY.name -> RepeatType.BI_WEEKLY
+    RepeatType.MONTHLY.name -> RepeatType.MONTHLY
+    RepeatType.QUARTERLY.name -> RepeatType.QUARTERLY
+    RepeatType.YEARLY.name -> RepeatType.YEARLY
+    else -> throw Exception("Invalid Repeat Type")
+}

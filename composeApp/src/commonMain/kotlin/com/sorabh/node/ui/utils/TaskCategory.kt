@@ -29,6 +29,22 @@ enum class TaskCategory(val value: String) {
     OTHER("Other")
 }
 
+fun String.toTaskCategory():TaskCategory = when(this){
+    TaskCategory.WORK.name -> TaskCategory.WORK
+    TaskCategory.PERSONAL.name -> TaskCategory.PERSONAL
+    TaskCategory.HEALTH.name -> TaskCategory.HEALTH
+    TaskCategory.HOME.name -> TaskCategory.HOME
+    TaskCategory.FINANCE.name -> TaskCategory.FINANCE
+    TaskCategory.QUICK.name -> TaskCategory.QUICK
+    TaskCategory.PROJECTS.name -> TaskCategory.PROJECTS
+    TaskCategory.GOALS.name -> TaskCategory.GOALS
+    TaskCategory.SHOPPING.name -> TaskCategory.SHOPPING
+    TaskCategory.SPORTS.name -> TaskCategory.SPORTS
+    TaskCategory.OTHER.name -> TaskCategory.OTHER
+    else -> throw Exception("Invalid Task Category")
+}
+
+
 val TaskCategory.color: Color
     get() = when (this) {
         TaskCategory.WORK -> Color(0xFF007AFF)        // Strong Blue – focus, professionalism

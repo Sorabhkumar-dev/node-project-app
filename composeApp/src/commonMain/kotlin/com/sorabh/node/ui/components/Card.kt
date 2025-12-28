@@ -71,6 +71,9 @@ import com.sorabh.node.ui.utils.container
 import com.sorabh.node.ui.utils.currentLocalDateTime
 import com.sorabh.node.ui.utils.formatTaskDate
 import com.sorabh.node.ui.utils.main
+import com.sorabh.node.ui.utils.toTaskCategory
+import com.sorabh.node.ui.utils.toTaskPriority
+import com.sorabh.node.ui.utils.toTaskStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import node.composeapp.generated.resources.Res
@@ -102,12 +105,12 @@ fun TaskCard(
                 .drawBehind {
                     val stripWidthPx = stripWidthDp.toPx()
                     drawRect(
-                        color = task.taskCategory.color.main,
+                        color = task.taskCategory.toTaskCategory().color.main,
                         topLeft = Offset.Zero,
                         size = Size(width = stripWidthPx, height = size.height)
                     )
                 }
-                .background(task.taskCategory.color.container, MaterialTheme.shapes.small)
+                .background(task.taskCategory.toTaskCategory().color.container, MaterialTheme.shapes.small)
                 .padding(16.dp)
         ) {
 
@@ -142,17 +145,17 @@ fun TaskCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 StatusBadge(
-                    text = task.taskStatus.name,
-                    containerColor = task.taskStatus.color.container,
-                    color = task.taskStatus.color
+                    text = task.taskStatus.toTaskStatus().name,
+                    containerColor = task.taskStatus.toTaskStatus().color.container,
+                    color = task.taskStatus.toTaskStatus().color
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
                 StatusBadge(
-                    text = task.priority.name,
-                    containerColor = task.priority.color.container,
-                    color = task.priority.color
+                    text = task.priority.toTaskPriority().name,
+                    containerColor = task.priority.toTaskPriority().color.container,
+                    color = task.priority.toTaskPriority().color
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -177,12 +180,12 @@ fun TaskCard(
 
                 // Task Type Chip (Minimal)
                 Surface(
-                    color = task.taskCategory.color.container,
+                    color = task.taskCategory.toTaskCategory().color.container,
                     shape = CircleShape
                 ) {
                     Text(
-                        text = task.taskCategory.name.lowercase().capitalize(),
-                        color = task.taskCategory.color,
+                        text = task.taskCategory.toTaskCategory().name.lowercase().capitalize(),
+                        color = task.taskCategory.toTaskCategory().color,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -252,7 +255,7 @@ fun TaskCardPreview() {
                     title = "Finish Project Documentation",
                     description = "Write the technical specs and api references for the client.",
                     dateTime = currentLocalDateTime(),
-                    taskCategory = TaskCategory.WORK,
+                    taskCategory = TaskCategory.WORK.name,
                     createdAt = currentLocalDateTime(),
                     updatedAt = currentLocalDateTime()
                 )
@@ -264,9 +267,9 @@ fun TaskCardPreview() {
                 task = TaskEntity(
                     title = "Buy Groceries",
                     dateTime = currentLocalDateTime(),
-                    taskCategory = TaskCategory.PERSONAL,
+                    taskCategory = TaskCategory.PERSONAL.name,
                     isRepeatable = true,
-                    repeatType = RepeatType.WEEKLY,
+                    repeatType = RepeatType.WEEKLY.name,
                     createdAt = currentLocalDateTime(),
                     updatedAt = currentLocalDateTime()
                 )
@@ -311,7 +314,7 @@ fun SwipeableTaskCard(
                         onDelete(task.id)
                     }
 
-                    SwipeToDismissBoxValue.EndToStart -> onComplete(task.copy(taskStatus = TaskStatus.DONE))
+                    SwipeToDismissBoxValue.EndToStart -> onComplete(task.copy(taskStatus = TaskStatus.DONE.name))
 
                     SwipeToDismissBoxValue.Settled -> {}
                 }

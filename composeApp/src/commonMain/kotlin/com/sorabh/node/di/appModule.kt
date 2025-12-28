@@ -20,7 +20,7 @@ val appModule = module {
     single<ApiRepository> { ApiRepositoryImpl(get(),get()) }
 
     viewModel { AppViewModel(get()) }
-    viewModel { TodayTaskViewModel(get()) }
+    viewModel { TodayTaskViewModel(get(),get()) }
     viewModel { AddTaskViewModel(get(), get()) }
     viewModel { ImportantTaskViewModel(get()) }
     viewModel { AllTaskViewModel(get()) }

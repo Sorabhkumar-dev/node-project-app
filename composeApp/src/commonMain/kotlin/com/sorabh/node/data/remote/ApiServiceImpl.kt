@@ -9,7 +9,7 @@ import io.ktor.client.request.setBody
 
 class ApiServiceImpl(private val ktorClient: HttpClient) : ApiService {
     override suspend fun syncTask(tasks: SyncRequest): SyncResponse =
-            ktorClient.post("") {
+            ktorClient.post("tasks/sync") {
                 setBody(tasks)
             }.body()
 }

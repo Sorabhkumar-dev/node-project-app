@@ -72,7 +72,6 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
     val isShowTimePicker = mutableStateOf(false)
 
     val selectTaskPriority = mutableStateOf(navData.priority)
-    val selectedTaskCategory = mutableStateOf(TaskCategory.WORK)
 
     val isTaskRepeatable = mutableStateOf(navData.isRepeatable)
 
@@ -240,10 +239,10 @@ class AddTaskViewModel(private val taskRepository: TaskRepository,private val na
                 title = taskTitle.value.text,
                 description = taskDescription.value.text,
                 dateTime = LocalDateTime(taskDate.value, taskTime.value),
-                priority = TaskPriority.entries[selectTaskPriority.value],
-                taskCategory = selectedTaskCategory.value,
+                priority = TaskPriority.entries[selectTaskPriority.value].name,
+                taskCategory = selectedCategory.value.name,
                 isRepeatable = isTaskRepeatable.value,
-                repeatType = if (isTaskRepeatable.value) selectRepeatType.value else null,
+                repeatType = if (isTaskRepeatable.value) selectRepeatType.value.name else null,
                 createdAt = currentLocalDateTime(),
                 updatedAt = currentLocalDateTime()
             )

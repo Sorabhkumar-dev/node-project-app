@@ -13,6 +13,13 @@ enum class TaskPriority {
     HIGH
 }
 
+fun String.toTaskPriority(): TaskPriority = when (this) {
+    TaskPriority.LOW.name -> TaskPriority.LOW
+    TaskPriority.MEDIUM.name -> TaskPriority.MEDIUM
+    TaskPriority.HIGH.name -> TaskPriority.HIGH
+    else -> throw Exception("Invalid Task Priority")
+}
+
 
 val TaskPriority.color: Color
     get() = when (this) {

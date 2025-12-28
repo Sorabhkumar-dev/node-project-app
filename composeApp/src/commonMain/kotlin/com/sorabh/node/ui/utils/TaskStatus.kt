@@ -14,6 +14,14 @@ enum class TaskStatus {
     CANCELLED
 }
 
+fun String.toTaskStatus(): TaskStatus = when (this) {
+    TaskStatus.TODO.name -> TaskStatus.TODO
+    TaskStatus.PROGRESS.name -> TaskStatus.PROGRESS
+    TaskStatus.DONE.name -> TaskStatus.DONE
+    TaskStatus.CANCELLED.name -> TaskStatus.CANCELLED
+    else -> throw Exception("Invalid Task Status")
+}
+
 // Extension property to get color based on status
 val TaskStatus.color: Color
     get() = when (this) {

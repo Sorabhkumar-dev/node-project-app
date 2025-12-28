@@ -48,6 +48,10 @@ import com.sorabh.node.ui.utils.TaskStatus
 import com.sorabh.node.ui.utils.color
 import com.sorabh.node.ui.utils.formatTaskDate2
 import com.sorabh.node.ui.utils.icon
+import com.sorabh.node.ui.utils.toRepeatType
+import com.sorabh.node.ui.utils.toTaskCategory
+import com.sorabh.node.ui.utils.toTaskPriority
+import com.sorabh.node.ui.utils.toTaskStatus
 import node.composeapp.generated.resources.Res
 import node.composeapp.generated.resources.description
 import node.composeapp.generated.resources.repeating_task
@@ -199,7 +203,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                                 expanded = viewModel.repeatDropDownExpand.value,
                                 onExpandedChange = viewModel::onRepeatDropDownExpanded,
                                 selectedItem = viewModel.selectedRepeatType.value
-                                    ?: taskDetail?.repeatType,
+                                    ?: taskDetail?.repeatType?.toRepeatType(),
                                 items = RepeatType.entries,
                                 label = {
                                     Text(text = it.value)
@@ -222,7 +226,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                                 expanded = viewModel.priorityDropDownExpand.value,
                                 onExpandedChange = viewModel::onPriorityDropDownExpanded,
                                 selectedItem = viewModel.selectedPriority.value
-                                    ?: taskDetail?.priority,
+                                    ?: taskDetail?.priority?.toTaskPriority(),
                                 items = TaskPriority.entries,
                                 label = {
                                     Text(text = it.name, color = it.color)
@@ -248,7 +252,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                             expanded = viewModel.statusDropDownExpand.value,
                             onExpandedChange = viewModel::onStausDropDownExpanded,
                             selectedItem = viewModel.selectedStatus.value
-                                ?: taskDetail?.taskStatus,
+                                ?: taskDetail?.taskStatus?.toTaskStatus(),
                             items = TaskStatus.entries,
                             label = {
                                 Text(text = it.name, color = it.color)
@@ -275,7 +279,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                                 expanded = viewModel.priorityDropDownExpand.value,
                                 onExpandedChange = viewModel::onPriorityDropDownExpanded,
                                 selectedItem = viewModel.selectedPriority.value
-                                    ?: taskDetail?.priority,
+                                    ?: taskDetail?.priority?.toTaskPriority(),
                                 items = TaskPriority.entries,
                                 label = {
                                     Text(text = it.name, color = it.color)
@@ -300,7 +304,7 @@ private fun TaskDetailContent(viewModel: TaskDetailViewModel) {
                             expanded = viewModel.categoryDropDownExpand.value,
                             onExpandedChange = viewModel::onCategoryDropDownExpanded,
                             selectedItem = viewModel.selectedCategory.value
-                                ?: taskDetail?.taskCategory,
+                                ?: taskDetail?.taskCategory?.toTaskCategory(),
                             items = TaskCategory.entries,
                             label = {
                                 Text(text = it.name, color = it.color)
